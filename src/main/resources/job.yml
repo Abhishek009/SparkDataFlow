@@ -8,6 +8,12 @@ job:
       table: deliveries
       schema: ipl
   - input:
+      df-name: postgresread
+      type: jdbc
+      identifier: postgres
+      table: customers
+      schema: postgres
+  - input:
       df-name: books
       type: file
       identifier: local
@@ -27,6 +33,11 @@ job:
       t_inputs: t1
       query: select count(*) from t1;
       output: out-02
+  - transform:
+      df-name: t3
+      t_inputs: postgresread
+      query: select * from postgresread;
+      output: out-03
 
   - output:
       df-name: out-01
@@ -38,10 +49,16 @@ job:
           delimiter=,
           header=true
 
+  - output:
+      df-name: out-03
+      type: jdbc
+      identifier: mysql
+      table: samplecustomerdata3
+      schema: sparkdataflow
 
   - output:
       df-name: out-02
       type: jdbc
-      identifier: mysql
+      identifier: postgres
       table: sampleipldata2
-      schema: sparkdataflow
+      schema: postgres

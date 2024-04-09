@@ -16,10 +16,10 @@ object MysqlOperation {
                      connectionUrl:String,
                      databaseName:String,
                      tableName:String,
-                     userName:String,password:String): DataFrame = {
+                     userName:String,password:String,driver:String): DataFrame = {
 
     val jdbcDf = spark.read.format("jdbc")
-      .option("driver", "com.mysql.cj.jdbc.Driver")
+      .option("driver", driver)
       .option("url", s"${connectionUrl}/${databaseName}")
       .option("dbtable", tableName)
       .option("user", userName)
@@ -35,13 +35,13 @@ object MysqlOperation {
                   databaseName:String,tableName:String,outputType:String,
                   identifier:String,connectionUrl:String,
                   userName:String,password:String,
-                 mode:String):Unit={
+                 mode:String,driver:String):Unit={
 
     val df = spark.table(s"${tempView}")
     try {
       df.write
         .format(s"${outputType}")
-        .option("driver", "com.mysql.cj.jdbc.Driver")
+        .option("driver", driver)
         .option("url", s"${connectionUrl}/${databaseName}")
         .option("dbtable", tableName)
         .option("user", userName)

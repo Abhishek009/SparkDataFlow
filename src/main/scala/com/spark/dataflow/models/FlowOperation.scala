@@ -28,13 +28,14 @@ object FlowOperation {
         val connectionUrl = commonConfig.get("url")
         val userName = commonConfig.get("username")
         val password = commonConfig.get("password")
+        val driver = commonConfig.get("driver")
         val databaseName = input.schema.getOrElse("")
         val tableName = input.table.getOrElse("")
         logger.info(s"input.table $tableName")
         logger.info(s"input.schema $databaseName")
         logger.info(s"Connection Url $connectionUrl")
 
-        inputDataFrame = MysqlOperation.getJdbcDF(spark, connectionUrl, databaseName, tableName, userName, password)
+        inputDataFrame = MysqlOperation.getJdbcDF(spark, connectionUrl, databaseName, tableName, userName, password,driver)
         SparkJob.createTempTable(spark,inputDataFrame,dfName)
       }
       case "file" => {
@@ -97,13 +98,14 @@ object FlowOperation {
             val connectionUrl = commonConfig.get("url")
             val userName = commonConfig.get("username")
             val password = commonConfig.get("password")
+            val driver = commonConfig.get("driver")
             println("connectionUrl=>"+connectionUrl)
 
             writeToJdbc(spark,f._1,output.`df-name`,
               output.schema.getOrElse(""),output.table.getOrElse(""),
               output.`type`,output.identifier,
               connectionUrl,userName,password,
-              output.mode.getOrElse(""))
+              output.mode.getOrElse(""),driver)
           }
         }
         )
