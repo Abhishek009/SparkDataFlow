@@ -1,7 +1,34 @@
 # SparkDataFlow
 SDF(Spark Data Flow) is an ETL tool which allows users to quickly write etl jobs based on the sql queries.
 
-**job.yml**
+**job_HiveToFile**
+
+```jobName: HiveToFile
+
+job:
+  - input:
+      df-name: etl_framework_source_one
+      type: hive
+      identifier: hive
+      table: etl_framework_source_one
+      schema: YOUR_SCHEMA_NAME
+
+  - transform:
+      df-name: t1
+      t_inputs: etl_framework_source_one
+      query: Select * from etl_framework_source_one
+      output: out-01
+
+  - output:
+      df-name: out-01
+      type: file
+      identifier: hdfs
+      path: /your/hdfs/location
+      output_format: csv
+      
+```
+
+**job_HiveToFile.yml**
 ```
 jobName: mysqltolocal
 
@@ -56,12 +83,27 @@ jdbc:
       username: root
       password: root
       url: jdbc:mysql://localhost:3306
-    postgress:
-      username: root
+      driver: com.mysql.cj.jdbc.Driver
+    postgres:
+      username: postgres
       password: root
-      url: jdbc://localhost/3306
-
+      url: jdbc:postgresql://localhost:5432
+      driver: org.postgresql.Driver
+    sqlserver:
+      username: postgres
+      password: root
+      url: jdbc:postgresql://localhost:5432
+      driver: org.postgresql.Driver
 file:
   - local:
       location: D:\SampleData\IPL\matches.csv
+  
+hive:
+
+databricks:
+  catalog: [optional catalog name if you are using Unity Catalog]
+  schema: [schema name] # Required
+  host: [yourorg.databrickshost.com] # Required
+  http_path: [/sql/your/http/path] # Required
+  token: [dapiXXXXXXXXXXXXXXXXXXXXXXX] # Required Personal Access Token (PAT) if using token-based authentication
 ```
