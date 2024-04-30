@@ -3,6 +3,7 @@ package com.spark.dataflow.models
 import com.spark.dataflow.models.FlowOperation.getClass
 import org.apache.logging.log4j.{LogManager, Logger}
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+import com.spark.dataflow.outputFormat.{generic_format, iceberg_format}
 
 object FileOperation {
 
@@ -37,14 +38,23 @@ object FileOperation {
                   output_format:String,
                   mode:String
                  ): Unit = {
-    logger.info(s"==========Output format ${output_format}")
+    logger.info(s"=====Output format is ${output_format}=====")
     val df = spark.table(s"${tempView}")
-    try{
-      df.write.format(output_format).mode(mode).save(path)
+    output_format match {
+      case "iceberg" => {
+          logger.error(s"Iceberg format does not supports writing to file.")
+      }
+      case "csv" =>{
+          generic_format.write(df,"csv",mode,path)
+      }
+      case "tsv" => {
+        generic_format.write(df,"csv",mode,path)
+      }
+      case "parquet" => {
+        generic_format.write(df,"csv",mode,path)
+      }
     }
-    catch {
-      case e:Exception => {e.printStackTrace()}
-    }
+
   }
 }
 

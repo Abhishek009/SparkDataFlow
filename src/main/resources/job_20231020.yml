@@ -1,3 +1,9 @@
+# Input: Job file to read the data from a mysql table and Read the data from a file
+# Transform 1: Join operation on file and mysql table
+# Transform 2: Join operation on file and mysql table
+# Output: Writes the output of transformation 1 to local file
+# Output: Writes the output of transformation 2 to  mysql table abc.zxc
+
 jobName: mysqltolocal
 
 job:
@@ -23,7 +29,7 @@ job:
   - transform:
       df-name: t2
       t_inputs: t1
-      query: select count(*) from table1;
+      query: select count(*) from t1;
       output: out-02
 
   - output:

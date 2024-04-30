@@ -12,8 +12,8 @@ import scala.collection.JavaConverters._
 
 /*
 Scala SDK 2.12.15
--configFile "D:\Google_Drive_Rahul\java_program\BigData\SparkDataFlow\src\main\resources\job.yml"
--jobFile "D:\\Google_Drive_Rahul\\java_program\\BigData\\SparkDataFlow\\src\\main\\resources\\config.yml"
+--configFile "D:\Google_Drive_Rahul\java_program\BigData\SparkDataFlow\src\main\resources\job.yml"
+--jobFile "D:\\Google_Drive_Rahul\\java_program\\BigData\\SparkDataFlow\\src\\main\\resources\\config.yml"
  */
 object Flow extends DatasetShims {
 
@@ -51,8 +51,6 @@ object Flow extends DatasetShims {
               Option(inputMap.getOrElse("option", "").asInstanceOf[String]),
               Option(inputMap.getOrElse("path", "").asInstanceOf[String])
             )
-
-
           }
           case "transform" => {
             val transformMap = job("transform").asInstanceOf[java.util.Map[String, Any]].asScala.toMap

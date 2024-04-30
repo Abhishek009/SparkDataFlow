@@ -7,7 +7,7 @@ import org.rogach.scallop.exceptions.{Exit, Help, RequiredOptionNotFound, Scallo
 
 import scala.collection.mutable.Map
 
-class CLIConfigParser(arguments: Seq[String]) extends ScallopConf(arguments) {
+class CLIConfigParser(arguments: Array[String]) extends ScallopConf(arguments) {
 
   banner("""Usage: Job Configuration [OPTIONS] ...
 |For SparkDataFlow to work there are few configuration which needs to be passed.
