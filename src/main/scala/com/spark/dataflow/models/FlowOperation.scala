@@ -2,7 +2,7 @@ package com.spark.dataflow.models
 
 import com.spark.dataflow.configparser.{Input, Output, Transform}
 import com.spark.dataflow.models.FileOperation.{logger, writeToFile}
-import com.spark.dataflow.models.HiveOperation.writeToHive
+
 import com.spark.dataflow.models.MysqlOperation.writeToJdbc
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.spark.dataflow.utils.{CommonConfigParser, SparkJob}
