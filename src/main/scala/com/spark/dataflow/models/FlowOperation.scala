@@ -161,11 +161,7 @@ object FlowOperation {
             logger.info(s"Hive output.option ${output.option}")
             logger.info(s"Hive output.mode ${output.mode}")
 
-            writeToHive(spark,f._1,output.`df-name`,
-              output.path.getOrElse(""),output.`type`,
-              output.identifier,output.output_format.getOrElse(""),
-              output.mode.getOrElse("")
-            )
+
           }
         }
         )

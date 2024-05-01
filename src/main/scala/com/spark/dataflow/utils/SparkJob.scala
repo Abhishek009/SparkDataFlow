@@ -13,7 +13,7 @@ object SparkJob {
    * @param appName
    * @param master
    */
-  def git createSparkSession(appName: String, master: String): SparkSession = {
+  def createSparkSession(appName: String, master: String): SparkSession = {
 
     logger.info(s"Master: ${master}")
     logger.info(s"AppName: ${appName}")

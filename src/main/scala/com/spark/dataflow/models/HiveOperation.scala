@@ -9,6 +9,6 @@ object HiveOperation {
     hiveDF
   }
 
-  def writeToHive()
+
 
 }
