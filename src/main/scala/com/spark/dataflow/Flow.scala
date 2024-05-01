@@ -73,6 +73,7 @@ object Flow extends DatasetShims {
               Option(outputMap.getOrElse("schema", "").asInstanceOf[String]),
               Option(outputMap.getOrElse("output_format","parquet").asInstanceOf[String]),
               Option(outputMap.getOrElse("option", "").asInstanceOf[String]),
+              Option(outputMap.getOrElse("partition", "").asInstanceOf[String]),
               Option(outputMap.getOrElse("mode", "append").asInstanceOf[String])
             )
           }

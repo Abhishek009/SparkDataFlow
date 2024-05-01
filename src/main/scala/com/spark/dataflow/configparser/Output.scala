@@ -9,7 +9,8 @@ case class Output(
                    var schema: Option[String],
                    var output_format: Option[String],
                    var option: Option[String],
-                   var mode:Option[String]) {
+                   var mode:Option[String],
+                   var partition:Option[String]) {
   path = Option(path.getOrElse(""))
   table = Option(table.getOrElse(""))
   schema = Option(schema.getOrElse(""))

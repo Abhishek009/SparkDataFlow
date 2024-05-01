@@ -2,7 +2,7 @@ package com.spark.dataflow.models
 
 import com.spark.dataflow.configparser.{Input, Output, Transform}
 import com.spark.dataflow.models.FileOperation.{logger, writeToFile}
-
+import com.spark.dataflow.models.HiveOperation.writeToHiveTable
 import com.spark.dataflow.models.MysqlOperation.writeToJdbc
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.spark.dataflow.utils.{CommonConfigParser, SparkJob}
@@ -115,8 +115,8 @@ object FlowOperation {
             val password = commonConfig.get("password")
             val driver = commonConfig.get("driver")
             println("Connection Url=>"+connectionUrl)
-
-            writeToJdbc(spark,f._1,output.`df-name`,
+            val tempView=f._1
+            writeToJdbc(spark,tempView,output.`df-name`,
               output.schema.getOrElse(""),output.table.getOrElse(""),
               output.`type`,output.identifier,
               connectionUrl,userName,password,
@@ -138,8 +138,8 @@ object FlowOperation {
             logger.info(s"File output.output_format ${output.output_format}")
             logger.info(s"File output.option ${output.option}")
             logger.info(s"File output.mode ${output.mode}")
-
-            writeToFile(spark,f._1,output.`df-name`,
+            val tempView=f._1
+            writeToFile(spark,tempView,output.`df-name`,
               output.path.getOrElse(""),output.`type`,
               output.identifier,output.output_format.getOrElse(""),
               output.mode.getOrElse(""), output.option.getOrElse("")
@@ -160,7 +160,15 @@ object FlowOperation {
             logger.info(s"Hive output.output_format ${output.output_format}")
             logger.info(s"Hive output.option ${output.option}")
             logger.info(s"Hive output.mode ${output.mode}")
-
+            logger.info(s"Hive output.mode ${output.partition}")
+            val tempView=f._1
+            val outputTableName=output.table.getOrElse("")
+            val outputSchemaName= output.schema.getOrElse("")
+            val outputMode = output.mode.getOrElse("")
+            val partition=output.partition.getOrElse("")
+            writeToHiveTable(spark,tempView,
+              outputTableName,outputSchemaName,
+              partition,outputMode)
 
           }
         }
