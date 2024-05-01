@@ -24,4 +24,5 @@ job:
       identifier: local
       path: D:\SampleData\mysql_customer_info
       output_format: csv
+      mode: overwrite
 

@@ -142,7 +142,7 @@ object FlowOperation {
             writeToFile(spark,f._1,output.`df-name`,
               output.path.getOrElse(""),output.`type`,
               output.identifier,output.output_format.getOrElse(""),
-              output.mode.getOrElse("")
+              output.mode.getOrElse(""), output.option.getOrElse("")
               )
           }
         }

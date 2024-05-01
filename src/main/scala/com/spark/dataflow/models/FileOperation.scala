@@ -36,25 +36,19 @@ object FileOperation {
                   outputType:String,
                   identifier:String,
                   output_format:String,
-                  mode:String
+                  mode:String,options:String
                  ): Unit = {
     logger.info(s"=====Output format is ${output_format}=====")
     val df = spark.table(s"${tempView}")
     output_format match {
-      case "iceberg" => {
-          logger.error(s"Iceberg format does not supports writing to file.")
+      case "csv" | "parquet" | "tsv"  =>{
+          generic_format.write(df,output_format,mode,path,options)
       }
-      case "csv" =>{
-          generic_format.write(df,"csv",mode,path)
+      case _ => {
+        logger.error(s"${output_format} format does not supports writing to file.")
       }
-      case "tsv" => {
-        generic_format.write(df,"csv",mode,path)
-      }
-      case "parquet" => {
-        generic_format.write(df,"csv",mode,path)
-      }
-    }
 
+    }
   }
 }
 
