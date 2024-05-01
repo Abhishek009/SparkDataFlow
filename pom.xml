@@ -100,14 +100,14 @@
       <version>3.0.1</version>
     </dependency>
 
-    <dependency>
+<!--    <dependency>
       <groupId>org.apache.iceberg</groupId>
       <artifactId>iceberg-spark-runtime-3.3_2.13</artifactId>
       <version>1.5.0</version>
-    </dependency>
+    </dependency>-->
 
     <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
-    <dependency>
+   <!-- <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
       <version>8.2.0</version>
@@ -117,7 +117,7 @@
       <artifactId>scalatest_2.12</artifactId>
       <version>3.0.0</version>
       <scope>test</scope>
-    </dependency>
+    </dependency>-->
   </dependencies>
 
   <!--<build>
@@ -137,45 +137,38 @@
   </build>-->
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
-    <testSourceDirectory>src/test/scala</testSourceDirectory>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.scalatest</groupId>
-          <artifactId>scalatest-maven-plugin</artifactId>
-          <version>2.2.0</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>test</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+
+
     <plugins>
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>4.8.1</version>
-        <configuration>
-          <recompileMode>incremental</recompileMode>
-          <scalaVersion>${scala.version}</scalaVersion>
-          <javacArgs>
-            <javacArg>-Xlint:unchecked</javacArg>
-            <javacArg>-Xlint:deprecation</javacArg>
-          </javacArgs>
-        </configuration>
+        <version>3.3.2</version>
         <executions>
           <execution>
             <goals>
               <goal>compile</goal>
-              <goal>testCompile</goal>
             </goals>
+            <configuration>
+              <args>
+              <arg>-dependencyfile</arg>
+              <arg>${project.build.directory}/.scala_dependencies</arg>
+              </args>
+            </configuration>
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>

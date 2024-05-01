@@ -1,6 +1,7 @@
 package com.spark.dataflow.outputFormat
 
 import com.spark.dataflow.models.FileOperation.logger
+import com.spark.dataflow.utils.CommonFunctions
 import org.apache.spark.sql.DataFrame
 
 object generic_format {
@@ -11,10 +12,11 @@ object generic_format {
             mode: String,
             path: String,extraOptions:String) = {
     try{
-      val arrayOfOption = extraOptions.split("\n")
-      val mapOfOption = arrayOfOption.map(s => (s.split("=")(0), s"""${s.split("=")(1)}""")).toMap
-      logger.info("mapOfOption " + mapOfOption)
-      df.write.format(output_format).options(mapOfOption).mode(mode).save(path)
+      df.write
+        .format(output_format)
+        .options(CommonFunctions.getOptions(extraOptions))
+        .mode(mode)
+        .save(path)
     }
     catch {
       case e:Exception => {e.printStackTrace()}
