@@ -20,3 +20,6 @@ job:
       identifier: hdfs
       path: /your/hdfs/location
       output_format: csv
+      mode: append #Default is overwrite
+      option: delimiter=\t # optional
+      partition: id # optional

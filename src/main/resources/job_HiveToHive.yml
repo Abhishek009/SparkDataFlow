@@ -1,4 +1,4 @@
-jobName: HiveToFile
+jobName: HiveToHive
 
 job:
   - input:
@@ -20,5 +20,4 @@ job:
       identifier: hive
       table: etl_framework_source_one_output
       schema: YOUR_SCHEMA_NAME
-      partitionBy: id
       mode: overwrite

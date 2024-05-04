@@ -1,4 +1,0 @@
-export base_path="Your path"
-spark-submit --master yarn --class com.spark.dataflow.Flow ${base_path}/SparkDataFlow-jar-with-dependencies.jar \
---configFile "${base_path}/job_hiveToFile.yml" \
---jobFile "${base_path}/config.yml"

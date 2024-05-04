@@ -160,7 +160,7 @@ object FlowOperation {
             logger.info(s"Hive output.output_format ${output.output_format}")
             logger.info(s"Hive output.option ${output.option}")
             logger.info(s"Hive output.mode ${output.mode}")
-            logger.info(s"Hive output.mode ${output.partition}")
+            logger.info(s"Hive output.partition ${output.partition}")
             val tempView=f._1
             val outputTableName=output.table.getOrElse("")
             val outputSchemaName= output.schema.getOrElse("")
