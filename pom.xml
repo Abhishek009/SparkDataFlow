@@ -136,6 +136,8 @@
       </plugins>
   </build>-->
   <build>
+    
+    <finalName>SparkDataFlow</finalName>
     <sourceDirectory>src/main/scala</sourceDirectory>
 
 
