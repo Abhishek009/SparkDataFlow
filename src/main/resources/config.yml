@@ -6,17 +6,21 @@ jdbc:
       username: root
       password: root
       url: jdbc:mysql://localhost:3306
+      database: sdf_schema
       driver: com.mysql.cj.jdbc.Driver
+
     postgres:
       username: postgres
       password: root
       url: jdbc:postgresql://localhost:5432
+      database: my-first-azure-db
       driver: org.postgresql.Driver
+
     sqlserver:
-      username: postgres
-      password: root
-      url: jdbc:postgresql://localhost:5432
-      driver: org.postgresql.Driver
+      username: SqlDbAdmin
+      password: Alibaba@02
+      url: jdbc:sqlserver://my-first-azure-sql-server.database.windows.net:1433;database=my-first-azure-db;encrypt=true;trustServerCertificate=true;
+      driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
 file:
   - local:
       location: D:\SampleData\IPL\matches.csv

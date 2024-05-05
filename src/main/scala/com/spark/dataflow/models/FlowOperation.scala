@@ -22,7 +22,8 @@ object FlowOperation {
       case "jdbc" => {
         logger.info(s"Input df-name ${input.`df-name`}")
         logger.info(s"Data Read will happen from ${input.`type`}")
-
+        logger.info(s"Identifier is ${input.identifier}")
+        logger.info(s"Database Name ${input.schema.getOrElse("")}")
 
         val dfName= input.`df-name`
         val commonConfig = CommonConfigParser.parseConfig(jobConfigFileName, "jdbc", input.identifier)
@@ -33,11 +34,13 @@ object FlowOperation {
         val databaseName = input.schema.getOrElse("")
         val tableName = input.table.getOrElse("")
 
+
         logger.info(s"Input table $tableName")
         logger.info(s"Input schema $databaseName")
         logger.info(s"Connection Url $connectionUrl")
 
-        inputDataFrame = MysqlOperation.getJdbcDF(spark, connectionUrl, databaseName, tableName, userName, password,driver)
+        inputDataFrame = MysqlOperation.getJdbcDF(spark, connectionUrl,
+          databaseName, tableName, userName, password,driver,input.identifier)
         SparkJob.createTempTable(spark,inputDataFrame,dfName)
       }
       case "file" => {

@@ -1,20 +1,30 @@
-CREATE TABLE `sdf_schema`.`sdf_framework_source_one` (
-  `id` int DEFAULT NULL,
-  `first_name` text,
-  `last_name` text,
-  `accountnumber` text,
-  `cardnumber` bigint DEFAULT NULL
+create schema sdf_schema;
+
+CREATE TABLE sdf_schema.sdf_framework_source_one (
+  id int DEFAULT NULL,
+  first_name text,
+  last_name text,
+  accountnumber text,
+  cardnumber bigint DEFAULT NULL
 );
 
-CREATE TABLE `sdf_schema`.`sdf_framework_source_two` (
-  `id` int DEFAULT NULL,
-  `first_name` text,
-  `last_name` text,
-  `accountnumber` text,
-  `cardnumber` bigint DEFAULT NULL
+CREATE TABLE sdf_schema.sdf_framework_source_two (
+  id int DEFAULT NULL,
+  first_name text,
+  last_name text,
+  accountnumber text,
+  cardnumber bigint DEFAULT NULL
 );
 
-CREATE TABLE `sdf_schema`.`spark_sdf_join`(
+CREATE TABLE sdf_schema.sdf_framework_source_two (
+  id int DEFAULT NULL,
+  first_name text,
+  last_name text,
+  accountnumber text,
+  cardnumber bigint DEFAULT NULL
+);
+
+CREATE TABLE sdf_schema.spark_sdf_join(
 id text,
 x_first_name text,
 x_last_name text,
@@ -25,6 +35,22 @@ y_last_name text,
 y_cardnumber text,
 y_accountnumber text
 );
+
+-- for sql server
+drop table sdf_schema.spark_sdf_join;
+CREATE TABLE sdf_schema.spark_sdf_join(
+id int,
+x_first_name nvarchar(50),
+x_last_name nvarchar(50),
+x_cardnumber bigint,
+x_accountnumber nvarchar(50),
+y_first_name nvarchar(50),
+y_last_name nvarchar(50),
+y_cardnumber bigint,
+y_accountnumber nvarchar(50)
+);
+
+Select * from sdf_schema.spark_sdf_join;
 
 select
 x.id as id,
@@ -40,6 +66,7 @@ from sdf_framework_source_one x
 left join sdf_framework_source_two y
 on x.id=y.id;
 
+Select * from sdf_schema.spark_sdf_join;
 
 create table sparkdataflow.t1 as Select m.batsman,b.city
 from mysqlread m

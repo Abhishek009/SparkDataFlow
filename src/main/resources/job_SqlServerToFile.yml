@@ -2,28 +2,28 @@
 # Transform: Select operation
 # Output: Writes the output of transformation  to local file
 
-jobName: mySqlToLocal
+jobName: sqlServerToLocal
 
 job:
   - input:
       df-name: mysql_customer_info
       type: jdbc
-      identifier: mysql
+      identifier: sqlserver
       table: sdf_framework_source_one
       schema: sdf_schema
 
   - transform:
-        df-name: t1
-        t_inputs: mysql_customer_info
-        query: "Select * from mysql_customer_info"
-        output: out-01
+      df-name: t1
+      t_inputs: mysql_customer_info
+      query: "Select * from mysql_customer_info"
+      output: out-01
 
   - output:
       df-name: out-01
       type: file
       identifier: local
-      path: D:\SampleData\mysql_sample_data
-      output_format: parquet
-      option: delimiter=#
-      mode: overwrite
+      path: D:\SampleData\sqlServer_sample_data
+      output_format: csv
+      option: delimiter=\t
+      mode: append
 
