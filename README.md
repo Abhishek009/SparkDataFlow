@@ -1,7 +1,7 @@
 # SparkDataFlow
 SDF(Spark Data Flow) is an ETL tool which allows users to quickly write etl jobs based on the sql queries.
 
-**job_HiveToFile**
+**job_HiveToFile.yml**
 
 ```jobName: HiveToFile
 
