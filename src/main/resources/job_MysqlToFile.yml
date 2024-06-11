@@ -2,8 +2,8 @@
 # Transform: Select operation
 # Output: Writes the output of transformation  to local file
 
-jobName: mySqlToLocal
-
+jobName: mySqlToLocalFile
+engine: spark
 job:
   - input:
       df-name: mysql_customer_info
@@ -22,8 +22,8 @@ job:
       df-name: out-01
       type: file
       identifier: local
-      path: D:\SampleData\mysql_sample_data
-      output_format: parquet
+      path: D:\SampleData\mysql_sample_data_1
+      output_format: csv
       option: delimiter=#
       mode: overwrite
 

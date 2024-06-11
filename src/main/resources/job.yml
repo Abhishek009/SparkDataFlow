@@ -1,5 +1,5 @@
 jobName: mysqltolocal
-
+engine: spark
 job:
   - input:
       df-name: mysqlread

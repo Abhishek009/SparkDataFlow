@@ -1,0 +1,25 @@
+jobName: databricksJob
+engine: databricks
+job:
+  - input:
+      df-name: dbread
+      type: databricks
+      identifier: dev
+      table: deliveries
+      schema: ipl
+
+
+  - transform:
+      df-name: t1
+      t_inputs: dbread
+      query: Select * from dbread
+      output: out-01
+
+  - output:
+      df-name: out-01
+      type: databricks
+      identifier: dev
+      path: D:/SampleData/IPLSample
+      table: samplecustomerdata3
+      schema: sparkdataflow
+

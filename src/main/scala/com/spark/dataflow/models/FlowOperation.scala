@@ -4,6 +4,7 @@ import com.spark.dataflow.configparser.{Input, Output, Transform}
 import com.spark.dataflow.models.FileOperation.{logger, writeToFile}
 import com.spark.dataflow.models.HiveOperation.writeToHiveTable
 import com.spark.dataflow.models.MysqlOperation.writeToJdbc
+import com.spark.dataflow.utils.CommonFunctions.writeToStaging
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.spark.dataflow.utils.{CommonConfigParser, SparkJob}
 import org.apache.logging.log4j.{LogManager, Logger}
@@ -52,10 +53,9 @@ object FlowOperation {
         val identifier = input.identifier
         val option = input.option.getOrElse("")
         logger.info(s"Input other option $option")
-
-
         inputDataFrame = FileOperation.getFileDF(spark, "", path, option)
         SparkJob.createTempTable(spark,inputDataFrame,input.`df-name`)
+
       }
       case "hive" => {
         logger.info(s"Input df-name ${input.`df-name`}")
@@ -76,17 +76,13 @@ object FlowOperation {
   }
 
   def createTransformation(transform: Transform, spark: SparkSession):  scala.collection.mutable.Map[String, String] = {
-
-
       val df_transform = spark.sql(s"${transform.query}")
       logger.info(s"Creating temp view ${transform.`df-name`}")
       df_transform.createOrReplaceTempView(s"${transform.`df-name`}")
-
-
-
       logger.info(s"Transform df-name ${transform.`df-name`}")
       logger.info(s"Transform t_inputs ${transform.t_inputs.getOrElse("")}")
       logger.info(s"Transform query ${transform.query}")
+      logger.info(s"Checking if sql model is a inline query or a file")
       logger.info(s"Transform output ${transform.output}")
 
       transformToOutputMapping += s"${transform.`df-name`}" -> s"${transform.output}"

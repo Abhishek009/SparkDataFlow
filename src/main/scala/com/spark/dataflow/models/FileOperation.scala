@@ -41,15 +41,7 @@ object FileOperation {
     logger.info(s"=====Output format is ${output_format}=====")
     val df = spark.table(s"${tempView}")
     generic_format.write(df,output_format,mode,path,options)
-    /*output_format match {
-      case "csv" | "parquet" | "tsv" | "orc"  =>{
-          generic_format.write(df,output_format,mode,path,options)
-      }
-      case _ => {
-        logger.error(s"${output_format} format does not supports writing to file.")
-      }
 
-    }*/
   }
 }
 

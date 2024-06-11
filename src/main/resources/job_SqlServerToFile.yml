@@ -15,7 +15,8 @@ job:
   - transform:
       df-name: t1
       t_inputs: mysql_customer_info
-      query: "Select * from mysql_customer_info"
+      #query: "Select * from mysql_customer_info"
+      qery: "-f /path/to/your/model"
       output: out-01
 
   - output:
