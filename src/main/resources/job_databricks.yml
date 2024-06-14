@@ -8,6 +8,14 @@ job:
       table: deliveries
       schema: ipl
 
+  - input:
+      df-name: books
+      type: file
+      identifier: local
+      option: |
+        delimiter=,
+        header=true
+      path: D:/SampleData/IPL/matches.csv
 
   - transform:
       df-name: t1
@@ -19,7 +27,6 @@ job:
       df-name: out-01
       type: databricks
       identifier: dev
-      path: D:/SampleData/IPLSample
       table: samplecustomerdata3
       schema: sparkdataflow
 

@@ -1,6 +1,7 @@
 package com.spark.dataflow
 
 import com.spark.dataflow.configparser.{Input, Output, Pipeline, Transform}
+import com.spark.dataflow.databricks.DatabricksFlowOperation
 import com.spark.dataflow.models.FlowOperation.inputDataFrame
 import org.apache.logging.log4j.LogManager
 import org.yaml.snakeyaml.Yaml
@@ -8,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 import scala.collection.convert.ImplicitConversions.`map AsScala`
 import com.spark.dataflow.models.{FileOperation, FlowOperation, MysqlOperation}
 import com.spark.dataflow.utils.CommonFunctions.{deleteFile, writeToStaging}
-import com.spark.dataflow.utils.{CommonConfigParser, HS2, SparkJob, commonCodeSnippet}
+import com.spark.dataflow.utils.{CommonCodeSnippet, CommonConfigParser, CommonFunctions, HS2, SparkJob}
 import org.apache.spark.sql.{DataFrame, DatasetShims, SparkSession}
 
 import java.io.{File, FileInputStream}
@@ -106,10 +107,37 @@ object Flow extends DatasetShims {
     val engine = yaml("engine").asInstanceOf[String]
     logger.info(s"Engine being used will be ${engine}")
     val parsedYaml = Pipeline(jobName, engine ,job1)
+    val jobList = parsedYaml.job
+    var transformToOutputMapping: scala.collection.mutable.Map[String, String] = scala.collection.mutable.Map.empty[String, String]
 
     engine match {
       case "databricks" => {
         logger.info("Inside databricks")
+        CommonFunctions.writeToStaging(CommonCodeSnippet.initialImports,"staging","codeToExecute.py")
+        CommonFunctions.writeToStaging(CommonCodeSnippet.mainFunction,"staging","codeToExecute.py")
+        CommonFunctions.writeToStaging(CommonCodeSnippet.indentation+CommonCodeSnippet.sparkSession,"staging","codeToExecute.py")
+
+        jobList.foreach(
+          job => {
+            job match {
+              case input: Input => {
+                val codeInput = DatabricksFlowOperation.createInput(input,jobConfigFileName)
+                CommonFunctions.writeToStaging(codeInput,"staging","codeToExecute.py")
+              }
+              case transform: Transform => {
+                transformToOutputMapping = DatabricksFlowOperation.createTransformation(transform)
+              }
+
+              case output: Output =>{
+                DatabricksFlowOperation.createOuput(output,transformToOutputMapping,jobConfigFileName)
+              }
+              case _ => {
+                logger.error(usage)
+              }
+            }
+          })
+
+
         logger.info("Trying to get the cluster details and status")
         if(databricks.Connection.getCluster(jobConfigFileName)){
           logger.info("Trying to create a temp dir in workspace")
@@ -128,8 +156,6 @@ object Flow extends DatasetShims {
       }
 
       case "spark" => {
-        val jobList = parsedYaml.job
-        var transformToOutputMapping: scala.collection.mutable.Map[String, String] = scala.collection.mutable.Map.empty[String, String]
 
         val spark = SparkJob.createSparkSession(jobName, "local")
 

@@ -16,7 +16,7 @@ object Connection {
   def getErrorMessage(host: String, runId: String, TOKEN: String) {
     val backend = HttpClientSyncBackend()
     val responseOutput = basicRequest.get(
-        uri"https://SthostH/api/2.1/jobs/runs/get-output")
+        uri"https://${host}/api/2.1/jobs/runs/get-output")
       .body(runId)
       .auth.bearer(TOKEN)
       .send(backend)
@@ -82,7 +82,7 @@ object Connection {
               finalJobStatus = "COMPLETED"
               isJobCompleted = true
             }
-            if (jsonObject.get("state").get("result_state").asText() == "FAILED") {
+            if (jsonObject.get("state").get("result_state").asText() == "FAILED" || jsonObject.get("state").get("result_state").asText() == "CANCELED") {
               logger.info(s"Job with ${runId} is " + jsonObject.get("state").get("result_state").asText())
               finalJobStatus = "COMPLETED"
               getErrorMessage(host, runId, TOKEN)
@@ -122,10 +122,8 @@ object Connection {
           logger.info(s"Cluster is in ${jsonObject.get("state").asText()} state")
           if (jsonObject.get("state").asText() == "RUNNING") {
             isclusterRunning = true
-            isclusterRunning
           } else {
             Thread.sleep(2000)
-            isclusterRunning
           }
         }
       }
@@ -134,11 +132,9 @@ object Connection {
   }
 
   def startTheCluster(cluster_id: String, host: String, TOKEN: String): Boolean = {
-
-
     var isCusterStarted = false
     val json_message =
-      s"""("cluster_id": "${cluster_id}")""".stripMargin
+      s"""{"cluster_id": \"${cluster_id}\"}""".stripMargin
 
     val backend = HttpClientSyncBackend()
     val responseOutput = basicRequest.post(uri = uri"https://${host}/api/2.0/clusters/start").body(json_message).auth.bearer(TOKEN).send(backend)
@@ -170,27 +166,19 @@ object Connection {
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
     val TOKEN = clusterConfig.get("TOKEN").getOrElse("")
-    val path = Paths.get("/datadrive/athena_in_packages/common/scripts/sdf/samplecode.sql")
+    val path = Paths.get("/datadrive/athena_in_packages/common/scripts/sdf/codeToExecute.py")
     val text = new String(Files.readAllBytes(path), StandardCharsets.UTF_8)
     logger.info(s"Original text data $text")
     val encodedText = Base64.getEncoder.encodeToString(text.getBytes(StandardCharsets.UTF_8))
     logger.info(s"encodedText text data $encodedText")
     val json_message =
       s"""f
-"path":
-"format":
-def uploadTheFileToWorkspace(jobConfigFileName: String): Boolean = f
-var isCodeUpdated=false
-val clusterConfig = getConfig(jobConfigFileName)
-val http_path = clusterConfig.get("http_path")
-val cluster_id = getclusterId(http_path)
-val host =
-"/workspace/Shared/direotoryViaAPI/v2/test1234.sq".
-"SOURCE"
-"language": "SQL"
-"content": I"$encodedText\"
-"overwrite": true
-Į""".stripMargin
+        "path": "/workspace/Shared/direotoryViaAPI/v2/codeToExecute.py",
+        "format": "SOURCE",
+        "language": "PYTHON",
+        "content": I"$encodedText\",
+        "overwrite": true
+        Į""".stripMargin
     val backend = HttpClientSyncBackend()
     val response = basicRequest.post(uri = uri"https://${host}/api/2.0/workspace/import").body(json_message).auth.bearer(TOKEN).send(backend)
     response.body match {
@@ -207,7 +195,6 @@ val host =
       }
     }
     isCodeUpdated
-
   }
 
   def getCluster(jobConfigFileName: String): Boolean = {
@@ -218,7 +205,7 @@ val host =
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
     val TOKEN = clusterConfig.get("TOKEN").getOrElse("")
-    val json_message = s"""("cluster_id": "$cluster_id"]""".stripMargin
+    val json_message = s"""{"cluster_id": \"$cluster_id\"}""".stripMargin
     logger.info(s"Host ${host}")
     logger.info(s"Http Path ${http_path}")
     logger.info(s"Getting the cluster info if cluster is running or stopped")
@@ -245,7 +232,7 @@ val host =
           if (jsonObject.get("state").asText() == "TERMINATED") {
             logger.info(s"Starting the cluster ${jsonObject.get("cluster_id").asText()}")
             if (startTheCluster(cluster_id, host, TOKEN)) {
-              logger.info(s"${cluster_id} started succesfully")
+              logger.info(s"${cluster_id} started successfully")
               isClusterRunning = true
             } else {
               logger.error(s"Fail to start the cluster")
@@ -276,11 +263,11 @@ val host =
       s"""
       {
     "run_name": "A multitask job run",
-   "notebook_task":{
-    "notebook_path": "/Workspace/shared/directoryViaAPI/v2/test1234. sql"
-  "libraries":""
-  }
-  "existing_cluster_id" .. I"${cluster_id}\"
+    "notebook_task":{
+      "notebook_path": "/Workspace/shared/directoryViaAPI/v2/codeToExecute.py",
+    "libraries":""
+  },
+  "existing_cluster_id": \"${cluster_id}\"
   }"""
 
     val backend = HttpClientSyncBackend()
@@ -313,7 +300,7 @@ val host =
       val cluster_id = getClusterId(http_path)
       val host = clusterConfig.get("host").getOrElse("")
       val TOKEN = clusterConfig.get("TOKEN").getOrElse("")
-      val json_message = """("path": "/Workspace/Shared/directoryViaAPI/v2/"}"""
+      val json_message = """{"path": "/Workspace/Shared/directoryViaAPI/v2/"}"""
       val backend = HttpClientSyncBackend()
       val response = basicRequest
         .post(uri = uri"https://${host}/api/2.0/workspace/mkdirs")
