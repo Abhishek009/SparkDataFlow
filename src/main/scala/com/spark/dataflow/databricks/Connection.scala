@@ -38,8 +38,8 @@ object Connection {
     }
   }
 
-  def getConfig(jobConfigFileName: String): Map[String, String] = {
-    val commonConfig = CommonConfigParser.parseConfig(jobConfigFileName, "databricks", "dev")
+  def getConfig(jobConfigFileName: String,identifier:String): Map[String, String] = {
+    val commonConfig = CommonConfigParser.parseConfig(jobConfigFileName, "databricks", identifier)
     val host = commonConfig.get("host")
     val http_path = commonConfig.get("http_path")
     val TOKEN = commonConfig.get("token")
@@ -159,9 +159,9 @@ object Connection {
     }
   }
 
-  def uploadTheFileToWorkspace(jobConfigFileName: String): Boolean = {
+  def uploadTheFileToWorkspace(jobConfigFileName: String,identifier:String ): Boolean = {
     var isCodeUpdated = false
-    var clusterConfig = getConfig(jobConfigFileName)
+    var clusterConfig = getConfig(jobConfigFileName,identifier)
     val http_path = clusterConfig.get("http_path").getOrElse("")
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
@@ -197,10 +197,10 @@ object Connection {
     isCodeUpdated
   }
 
-  def getCluster(jobConfigFileName: String): Boolean = {
+  def getCluster(jobConfigFileName: String,identifier:String): Boolean = {
     logger.info(s"Getting the cluster info")
     var isClusterRunning = false
-    var clusterConfig = getConfig(jobConfigFileName)
+    var clusterConfig = getConfig(jobConfigFileName,identifier)
     val http_path = clusterConfig.get("http_path").getOrElse("")
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
@@ -251,10 +251,10 @@ object Connection {
         isClusterRunning
     }
 
-  def execute(jobConfigFileName: String):Boolean = {
+  def execute(jobConfigFileName: String,identifier:String):Boolean = {
     logger.info("Executing the code")
 
-    val clusterConfig = getConfig(jobConfigFileName)
+    val clusterConfig = getConfig(jobConfigFileName,identifier)
     val http_path = clusterConfig.get("http_path").getOrElse("")
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
@@ -293,9 +293,9 @@ object Connection {
         checkJobStatus(run_id, host, TOKEN)
     }
 
-    def createTempDirInWorkspace(jobConfigFileName: String): Boolean = {
+    def createTempDirInWorkspace(jobConfigFileName: String,identifier: String): Boolean = {
       var isDirectoryCreated = false
-      val clusterConfig = getConfig(jobConfigFileName)
+      val clusterConfig = getConfig(jobConfigFileName,identifier)
       val http_path = clusterConfig.get("http_path").getOrElse("")
       val cluster_id = getClusterId(http_path)
       val host = clusterConfig.get("host").getOrElse("")

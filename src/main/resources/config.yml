@@ -20,9 +20,11 @@ jdbc:
       password: YOURPASSWORD
       url: jdbc:sqlserver://my-first-azure-sql-server.database.windows.net:1433;database=my-first-azure-db;encrypt=true;trustServerCertificate=true;
       driver: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
 file:
   - local:
-      location: D:\SampleData\IPL\matches.csv
+           location: D:\SampleData\IPL\matches.csv
+  - dbfs:
 
 hive:
 

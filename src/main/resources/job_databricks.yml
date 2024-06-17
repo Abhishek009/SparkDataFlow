@@ -25,8 +25,7 @@ job:
 
   - output:
       df-name: out-01
-      type: databricks
-      identifier: dev
-      table: samplecustomerdata3
-      schema: sparkdataflow
+      type: file
+      identifier: local
+      path: D:\SampleData\mysql_sample_data_1
 

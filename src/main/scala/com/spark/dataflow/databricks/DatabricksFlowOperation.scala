@@ -16,10 +16,10 @@ object DatabricksFlowOperation {
   }
 
 
-
   def createInput(input: Input, jobConfigFileName: String):String = {
 
     input.`type` match {
+
       case "file" => {
         logger.info(s"Input df-name ${input.`df-name`}")
         logger.info(s"Input type ${input.`type`}")
@@ -70,27 +70,58 @@ object DatabricksFlowOperation {
     transformToOutputMapping
   }
 
-  def createOuput(output: Output, transformToOutputMapping: mutable.Map[String, String], jobConfigFileName: String): Unit = {
-    transformToOutputMapping.foreach(f => {
-      println(f._1, f._2)
-      if (f._2 == output.`df-name`) {
-        logger.info(s"Hive output.df-name ${output.`df-name`}")
-        logger.info(s"Hive output.t_inputs ${output.path}")
-        logger.info(s"Hive output.type ${output.`type`}")
-        logger.info(s"Hive output.identifier ${output.identifier}")
-        logger.info(s"Hive output.output_format ${output.output_format}")
-        logger.info(s"Hive output.option ${output.option}")
-        logger.info(s"Hive output.mode ${output.mode}")
-        logger.info(s"Hive output.partition ${output.partition}")
-        val tempView = f._1
-        val outputTableName = output.table.getOrElse("")
-        val outputSchemaName = output.schema.getOrElse("")
-        val outputMode = output.mode.getOrElse("")
-        val partition = output.partition.getOrElse("")
-        CommonFunctions.writeToStaging(
-          s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+  def createOuput(output: Output, transformToOutputMapping: mutable.Map[String, String], jobConfigFileName: String): Unit =
+  {
+    output.`type` match {
+      // Check if output.type is jdbc
+      case "file" => {
+        transformToOutputMapping.foreach(f => {
+          println(f._1, f._2)
+          if (f._2 == output.`df-name`) {
+            logger.info(s"File output.df-name ${output.`df-name`}")
+            logger.info(s"File output.t_inputs ${output.path}")
+            logger.info(s"File output.type ${output.`type`}")
+            logger.info(s"File output.identifier ${output.identifier}")
+            logger.info(s"File output.output_format ${output.output_format}")
+            logger.info(s"File output.option ${output.option}")
+            logger.info(s"File output.mode ${output.mode}")
+            logger.info(s"File output.partition ${output.partition}")
+
+            val tempView = f._1
+            val outputTableName = output.table.getOrElse("")
+            val outputSchemaName = output.schema.getOrElse("")
+            val outputMode = output.mode.getOrElse("")
+            val partition = output.partition.getOrElse("")
+            CommonFunctions.writeToStaging(
+              s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+          }
+        })
       }
-    })
+      case "databricks" => {
+        transformToOutputMapping.foreach(f => {
+          println(f._1, f._2)
+          if (f._2 == output.`df-name`) {
+            logger.info(s"Databricks output.df-name ${output.`df-name`}")
+            logger.info(s"Databricks output.t_inputs ${output.path}")
+            logger.info(s"Databricks output.type ${output.`type`}")
+            logger.info(s"Databricks output.identifier ${output.identifier}")
+            logger.info(s"Databricks output.output_format ${output.output_format}")
+            logger.info(s"Databricks output.option ${output.option}")
+            logger.info(s"Databricks output.mode ${output.mode}")
+            logger.info(s"Databricks output.partition ${output.partition}")
+
+            val tempView = f._1
+            val outputTableName = output.table.getOrElse("")
+            val outputSchemaName = output.schema.getOrElse("")
+            val outputMode = output.mode.getOrElse("")
+            val partition = output.partition.getOrElse("")
+            CommonFunctions.writeToStaging(
+              s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+          }
+        })
+      }
+    }
+
   }
 
 }

@@ -116,12 +116,14 @@ object Flow extends DatasetShims {
         CommonFunctions.writeToStaging(CommonCodeSnippet.initialImports,"staging","codeToExecute.py")
         CommonFunctions.writeToStaging(CommonCodeSnippet.mainFunction,"staging","codeToExecute.py")
         CommonFunctions.writeToStaging(CommonCodeSnippet.indentation+CommonCodeSnippet.sparkSession,"staging","codeToExecute.py")
-
+        var inputDatabricksIdentifier=""
+        var outputDatabricksIdentifier=""
         jobList.foreach(
           job => {
             job match {
               case input: Input => {
                 val codeInput = DatabricksFlowOperation.createInput(input,jobConfigFileName)
+                if(input.`type`.equalsIgnoreCase("databricks")) inputDatabricksIdentifier=input.identifier
                 CommonFunctions.writeToStaging(codeInput,"staging","codeToExecute.py")
               }
               case transform: Transform => {
@@ -130,6 +132,7 @@ object Flow extends DatasetShims {
 
               case output: Output =>{
                 DatabricksFlowOperation.createOuput(output,transformToOutputMapping,jobConfigFileName)
+                if(output.`type`.equalsIgnoreCase("databricks")) outputDatabricksIdentifier=output.identifier
               }
               case _ => {
                 logger.error(usage)
@@ -139,13 +142,13 @@ object Flow extends DatasetShims {
 
 
         logger.info("Trying to get the cluster details and status")
-        if(databricks.Connection.getCluster(jobConfigFileName)){
+        if(databricks.Connection.getCluster(jobConfigFileName,inputDatabricksIdentifier)){
           logger.info("Trying to create a temp dir in workspace")
-          if(databricks.Connection.createTempDirInWorkspace(jobConfigFileName)){
+          if(databricks.Connection.createTempDirInWorkspace(jobConfigFileName,inputDatabricksIdentifier)){
             logger.info("Directory was created succesfully")
-            if(databricks.Connection.uploadTheFileToWorkspace(jobConfigFileName)){
+            if(databricks.Connection.uploadTheFileToWorkspace(jobConfigFileName,inputDatabricksIdentifier)){
               logger.info("Code update succesfully")
-              if(databricks.Connection.execute(jobConfigFileName)){
+              if(databricks.Connection.execute(jobConfigFileName,inputDatabricksIdentifier)){
                 logger.info("Job execution completed")
               }
             }

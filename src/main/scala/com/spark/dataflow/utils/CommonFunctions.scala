@@ -1,11 +1,10 @@
 package com.spark.dataflow.utils
-import com.spark.dataflow.models.FileOperation.logger
-import org.apache.spark.unsafe.array.ByteArrayMethods
 
+import org.apache.logging.log4j.{LogManager, Logger}
 import java.io.{BufferedWriter, File, FileWriter}
 
 object CommonFunctions {
-
+    val logger: Logger = LogManager.getLogger(getClass.getSimpleName)
     def getOptions(extraOptions:String):Map[String,String] = {
 
         var mapOfOption:Map[String,String] = Map()
@@ -43,4 +42,20 @@ object CommonFunctions {
     }
 
 
+
+    def getOptionsForDatabricks(extraOptions: String) = {
+        var mapOfOption:String = ""
+        if(!extraOptions.isEmpty){
+            val arrayOfOption = extraOptions.split("\n")
+            logger.info(arrayOfOption)
+
+
+            for(element <- arrayOfOption){
+                mapOfOption=mapOfOption+element.replace("=","='")+"',"
+            }
+        }
+        mapOfOption.init
     }
+
+
+}
