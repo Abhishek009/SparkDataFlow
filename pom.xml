@@ -11,7 +11,7 @@
     <encoding>UTF-8</encoding>
     <jackson.version>2.13.4</jackson.version>
     <spark.version>3.0.0</spark.version>
-    <scala.compact.version>2.12.15</scala.compact.version>
+    <scala.compact.version>2.12.19</scala.compact.version>
     <scala.version>2.12.12</scala.version>
     <!--<scala.compact.version>2.13.14</scala.compact.version>
     <scala.version>2.13</scala.version>-->
@@ -108,11 +108,27 @@
       <version>3.0.1</version>
     </dependency>
 
-<!--    <dependency>
-      <groupId>org.apache.iceberg</groupId>
-      <artifactId>iceberg-spark-runtime-3.3_2.13</artifactId>
-      <version>1.5.0</version>
-    </dependency>-->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.15.1</version>
+    </dependency>
+
+
+    <dependency>
+    <groupId>org.freemarker</groupId>
+    <artifactId>freemarker-gae</artifactId>
+    <version>2.3.31</version>
+    </dependency>
+
+
+    <!-- https://mvnrepository.com/artifact/com.lihaoyi/upickle -->
+    <dependency>
+      <groupId>com.lihaoyi</groupId>
+      <artifactId>upickle_2.12</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
 
     <!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
     <dependency>

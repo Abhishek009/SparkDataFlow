@@ -3,7 +3,7 @@ package com.spark.dataflow.utils
 object CommonCodeSnippet {
 
   val sparkSession="sparkSession"
-  val sparkSessionInitialize=s"${sparkSession} = SparkSession.builder().getOrCreate()"
+  val sparkSessionInitialize=s"${sparkSession} = SparkSession.builder.getOrCreate()"
   val initialImports=
     s"""
        |import os
@@ -14,4 +14,6 @@ object CommonCodeSnippet {
   val createOrTempView="createOrReplaceTempView"
   val mainFunction="if __name__ == '__main__':"
   val indentation="\t"
+  var stagingLocation="staging"
+  var tempCodeFile="codeToExecute.py"
 }

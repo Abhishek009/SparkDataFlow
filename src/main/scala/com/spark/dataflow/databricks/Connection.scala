@@ -172,13 +172,13 @@ object Connection {
     val encodedText = Base64.getEncoder.encodeToString(text.getBytes(StandardCharsets.UTF_8))
     logger.info(s"encodedText text data $encodedText")
     val json_message =
-      s"""f
-        "path": "/workspace/Shared/direotoryViaAPI/v2/codeToExecute.py",
+      s"""{
+        "path": "/Workspace/Shared/directoryViaAPI/v2/codeToExecute.py",
         "format": "SOURCE",
         "language": "PYTHON",
         "content": I"$encodedText\",
         "overwrite": true
-        Į""".stripMargin
+        }""".stripMargin
     val backend = HttpClientSyncBackend()
     val response = basicRequest.post(uri = uri"https://${host}/api/2.0/workspace/import").body(json_message).auth.bearer(TOKEN).send(backend)
     response.body match {

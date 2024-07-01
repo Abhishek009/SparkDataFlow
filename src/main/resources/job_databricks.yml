@@ -20,7 +20,7 @@ job:
   - transform:
       df-name: t1
       t_inputs: dbread
-      query: Select * from dbread
+      query: '--file D:/Google_Drive_Rahul/GitHub/SparkDataFlow/sql/sample.sql'
       output: out-01
 
   - output:

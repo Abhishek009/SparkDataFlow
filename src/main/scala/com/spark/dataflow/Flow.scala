@@ -2,21 +2,18 @@ package com.spark.dataflow
 
 import com.spark.dataflow.configparser.{Input, Output, Pipeline, Transform}
 import com.spark.dataflow.databricks.DatabricksFlowOperation
-import com.spark.dataflow.models.FlowOperation.inputDataFrame
 import org.apache.logging.log4j.LogManager
 import org.yaml.snakeyaml.Yaml
 
 import scala.collection.convert.ImplicitConversions.`map AsScala`
-import com.spark.dataflow.models.{FileOperation, FlowOperation, MysqlOperation}
-import com.spark.dataflow.utils.CommonFunctions.{deleteFile, writeToStaging}
-import com.spark.dataflow.utils.{CommonCodeSnippet, CommonConfigParser, CommonFunctions, HS2, SparkJob}
-import org.apache.spark.sql.{DataFrame, DatasetShims, SparkSession}
+import com.spark.dataflow.models.FlowOperation
+import com.spark.dataflow.utils.CommonCodeSnippet._
+import com.spark.dataflow.utils.{CommonCodeSnippet, CommonFunctions, SparkJob}
+import org.apache.spark.sql.{DataFrame, DatasetShims}
 
 import java.io.{File, FileInputStream}
 import java.util
 import scala.collection.JavaConverters._
-import java.util.ArrayList
-import java.util.Map
 /*
 Scala SDK 2.12.15
 --configFile "D:\Google_Drive_Rahul\java_program\BigData\SparkDataFlow\src\main\resources\job.yml"
@@ -68,11 +65,14 @@ object Flow extends DatasetShims {
 
           if(transformMap("query").asInstanceOf[String].toString.contains("--file"))
             {
-              sql=transformMap("query").asInstanceOf[String].toString.split("--file")(1)
+              val sqlPath=transformMap("query").asInstanceOf[String].toString.split("--file")(1)
+              CommonFunctions.templateExecution(sqlPath.trim())
+              sql=CommonFunctions.readFileAsString(CommonCodeSnippet.stagingLocation+"/"+new File(sqlPath.trim()).getName)
             }
           else
           {
             sql=transformMap("query").asInstanceOf[String]
+
           }
 
           Transform(
@@ -113,9 +113,10 @@ object Flow extends DatasetShims {
     engine match {
       case "databricks" => {
         logger.info("Inside databricks")
-        CommonFunctions.writeToStaging(CommonCodeSnippet.initialImports,"staging","codeToExecute.py")
-        CommonFunctions.writeToStaging(CommonCodeSnippet.mainFunction,"staging","codeToExecute.py")
-        CommonFunctions.writeToStaging(CommonCodeSnippet.indentation+CommonCodeSnippet.sparkSession,"staging","codeToExecute.py")
+        CommonFunctions.removeFile(s"${stagingLocation}/${tempCodeFile}")
+        CommonFunctions.writeToStaging(initialImports,stagingLocation,tempCodeFile)
+        CommonFunctions.writeToStaging(mainFunction,stagingLocation,tempCodeFile)
+        CommonFunctions.writeToStaging(indentation+sparkSessionInitialize,stagingLocation,tempCodeFile)
         var inputDatabricksIdentifier=""
         var outputDatabricksIdentifier=""
         jobList.foreach(
@@ -124,15 +125,13 @@ object Flow extends DatasetShims {
               case input: Input => {
                 val codeInput = DatabricksFlowOperation.createInput(input,jobConfigFileName)
                 if(input.`type`.equalsIgnoreCase("databricks")) inputDatabricksIdentifier=input.identifier
-                CommonFunctions.writeToStaging(codeInput,"staging","codeToExecute.py")
+                CommonFunctions.writeToStaging(codeInput,stagingLocation,tempCodeFile)
               }
               case transform: Transform => {
                 transformToOutputMapping = DatabricksFlowOperation.createTransformation(transform)
               }
-
               case output: Output =>{
                 DatabricksFlowOperation.createOuput(output,transformToOutputMapping,jobConfigFileName)
-                if(output.`type`.equalsIgnoreCase("databricks")) outputDatabricksIdentifier=output.identifier
               }
               case _ => {
                 logger.error(usage)
@@ -173,7 +172,7 @@ object Flow extends DatasetShims {
                 val sparkTempCatalog:DataFrame = spark.sql(s"show tables")
 
                 logger.info(s"Spark Temp Catalog ")
-                logger.info(new DatasetHelper(sparkTempCatalog).toShowString(20))
+                //logger.info(new DatasetHelper(sparkTempCatalog).toShowString(20))
                 //sparkTempCatalog.foreach(f =>  {logger.info(f.get(f.fieldIndex("database"))+ "|"+ f.get(f.fieldIndex("tableName")))})
                 logger.info(s"Transform To Output Mapping ${transformToOutputMapping}")
               }

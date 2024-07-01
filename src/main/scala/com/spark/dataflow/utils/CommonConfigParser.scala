@@ -4,7 +4,7 @@ package com.spark.dataflow.utils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
-
+import scala.io
 import java.io.{File, FileInputStream}
 import java.util
 import scala.collection.JavaConverters._
@@ -28,6 +28,12 @@ object CommonConfigParser {
     val jdbcConfiguration = yamlData.get(connectionType).asInstanceOf[java.util.Map[String, String]]
     jdbcConfiguration.get(connectionSubType).asInstanceOf[java.util.Map[String, String]]
 
+  }
+
+  def getMetaConfig():Map[String,String] ={
+
+    val map = io.Source.fromFile("resource/meta.conf").mkString.split("=").map(arr => (arr(0)->arr(1))).toMap
+map
   }
 
 }
