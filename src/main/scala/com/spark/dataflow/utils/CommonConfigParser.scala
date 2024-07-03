@@ -4,6 +4,8 @@ package com.spark.dataflow.utils
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
+import upickle.default.read
+
 import scala.io
 import java.io.{File, FileInputStream}
 import java.util
@@ -30,10 +32,10 @@ object CommonConfigParser {
 
   }
 
-  def getMetaConfig():Map[String,String] ={
+  def getMetaConfig(configVariables:String):Map[String,String] ={
 
-    val map = io.Source.fromFile("resource/meta.conf").mkString.split("=").map(arr => (arr(0)->arr(1))).toMap
-map
+    val input = io.Source.fromFile(configVariables).mkString
+    read[Map[String,String]](input)
   }
 
 }

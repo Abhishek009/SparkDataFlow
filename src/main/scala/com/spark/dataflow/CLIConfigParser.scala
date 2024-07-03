@@ -24,12 +24,18 @@ class CLIConfigParser(arguments: Array[String]) extends ScallopConf(arguments) {
     required = true,
     descr = "Job File is required")
 
+  val jobConfig = opt[String](
+    name = "jobConfig",
+    required = false,
+    descr = "File which contains the variable for the sql")
+
+
   def getArgMap(): Map[String, String] = {
     var argsMap = scala.collection.mutable.Map[String, String]()
     argsMap += ("configFile" -> configFile())
     argsMap += ("jobFile" -> jobFile())
-    /*argsMap += ("date" -> date())
-    argsMap += ("ctlId" -> ctlId())
+    argsMap += ("jobConfig" -> jobConfig())
+    /*argsMap += ("ctlId" -> ctlId())
     argsMap += ("groupId" -> groupId())
     argsMap += ("transformType" -> transformType())
     argsMap += ("source" -> source())*/

@@ -86,7 +86,7 @@ object CommonFunctions {
     }
 
 
-    def templateExecution(sqlFile:String): Unit = {
+    def templateExecution(sqlFile:String,configVariables:String): Unit = {
         val sourceFile = new File(sqlFile).getName
         val cfg = new Configuration(Configuration.VERSION_2_3_31)
         val templateBasePath = createTempFileFromGiven(sqlFile)
@@ -101,10 +101,11 @@ object CommonFunctions {
         logger.info(s"======> ${filename}")
         val template = cfg.getTemplate(filename)
         val out = new StringWriter
-        val someAttributes = CommonConfigParser.getMetaConfig()
-        /*val someAttributes = Map(
-          "ods" -> "20240619"
-        )*/
+        var someAttributes:Map[String,String]=Map()
+        if(configVariables!=""){
+            someAttributes = CommonConfigParser.getMetaConfig(configVariables)
+        }
+        logger.info(s"Config attributes $someAttributes")
         template.process(someAttributes.asJava, out)
         try{
             FileUtils.writeStringToFile(new File(s"${CommonCodeSnippet.stagingLocation}/${sourceFile}"),out.toString, StandardCharsets.UTF_8)

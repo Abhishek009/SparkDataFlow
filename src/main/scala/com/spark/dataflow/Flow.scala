@@ -36,6 +36,7 @@ object Flow extends DatasetShims {
 
     val commonConfigFileName = argsMap.getOrElse("configFile","")
     val jobConfigFileName = argsMap.getOrElse("jobFile","")
+    val configVariables = argsMap.getOrElse("jobConfig","")
     val jobConfig = new FileInputStream((new File(commonConfigFileName)))
     val yaml  = new Yaml().load(jobConfig).asInstanceOf[java.util.Map[String, Any]].asScala.toMap
     val jobName = yaml("jobName").asInstanceOf[String]
@@ -66,7 +67,7 @@ object Flow extends DatasetShims {
           if(transformMap("query").asInstanceOf[String].toString.contains("--file"))
             {
               val sqlPath=transformMap("query").asInstanceOf[String].toString.split("--file")(1)
-              CommonFunctions.templateExecution(sqlPath.trim())
+              CommonFunctions.templateExecution(sqlPath.trim(),configVariables)
               sql=CommonFunctions.readFileAsString(CommonCodeSnippet.stagingLocation+"/"+new File(sqlPath.trim()).getName)
             }
           else
