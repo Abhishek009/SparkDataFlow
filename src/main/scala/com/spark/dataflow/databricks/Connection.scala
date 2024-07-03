@@ -76,7 +76,7 @@ object Connection {
             .get("life_cycle_state").asText())
 
           var joblifeCycleFinalState = jsonObject.get("state").get("life_cycle_state").asText()
-          if (joblifeCycleFinalState == "TERMINATED") {
+          if (joblifeCycleFinalState == "TERMINATED" || joblifeCycleFinalState == "INTERNAL_ERROR") {
             if (jsonObject.get("state").get("result_state").asText() == "SUCCESS") {
               logger.info(s"Job with ${runId} is " + jsonObject.get("state").get("result_state").asText())
               finalJobStatus = "COMPLETED"
@@ -176,7 +176,7 @@ object Connection {
         "path": "/Workspace/Shared/directoryViaAPI/v2/codeToExecute.py",
         "format": "SOURCE",
         "language": "PYTHON",
-        "content": I"$encodedText\",
+        "content": \"$encodedText\",
         "overwrite": true
         }""".stripMargin
     val backend = HttpClientSyncBackend()
@@ -264,7 +264,7 @@ object Connection {
       {
     "run_name": "A multitask job run",
     "notebook_task":{
-      "notebook_path": "/Workspace/shared/directoryViaAPI/v2/codeToExecute.py",
+      "notebook_path": "/Workspace/Shared/directoryViaAPI/v2/codeToExecute.py",
     "libraries":""
   },
   "existing_cluster_id": \"${cluster_id}\"
