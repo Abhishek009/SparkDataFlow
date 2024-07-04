@@ -61,8 +61,9 @@ object CommonFunctions {
             for(element <- arrayOfOption){
                 mapOfOption=mapOfOption+element.replace("=","='")+"',"
             }
+            mapOfOption=mapOfOption.init
         }
-        mapOfOption.init
+        mapOfOption
     }
 
     def createTempFileFromGiven(originalSqlFile: String):String = {
@@ -84,7 +85,6 @@ object CommonFunctions {
         Files.write(path, renderedSql.getBytes());
 
     }
-
 
     def templateExecution(sqlFile:String,configVariables:String): Unit = {
         val sourceFile = new File(sqlFile).getName
@@ -114,8 +114,6 @@ object CommonFunctions {
                 logger.error("Not able to created the file")
             }
         }
-        //println(mustacheFile)
-        //engine.layout("D:\\Google_Drive_Rahul\\GitHub\\SparkDataFlow\\sql\\test.ftl", someAttributes)
     }
 
 

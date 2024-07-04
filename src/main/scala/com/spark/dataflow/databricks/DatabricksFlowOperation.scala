@@ -32,6 +32,7 @@ object DatabricksFlowOperation {
         val inputDataFrame = DatabrickFileOperation.getFileDF(path, option)
         val tempTable = createTempTable(CommonCodeSnippet.fileDf,input.`df-name`)
         inputDataFrame+System.lineSeparator()+tempTable
+
       }
       case "databricks" => {
         logger.info(s"Input df-name ${input.`df-name`}")
@@ -57,7 +58,7 @@ object DatabricksFlowOperation {
 
   def createTransformation(transform: Transform): mutable.Map[String, String] = {
 
-    CommonFunctions.writeToStaging(s"""${CommonCodeSnippet.indentation}${transform.`df-name`}=sparkSession.sql(\"\"\" ${transform.query} \"\"\")""","staging","codeToExecute.py")
+    CommonFunctions.writeToStaging(s"""${CommonCodeSnippet.indentation}${transform.`df-name`}=${CommonCodeSnippet.sparkSession}.sql(\"\"\" ${transform.query.stripMargin} \"\"\")""","staging","codeToExecute.py")
     //CommonFunctions.writeToStaging(s"""${CommonCodeSnippet.indentation}${transform.`df-name`}=sparkSession.sql(\"\"\" ${transform.`df-name`} \"\"\")""","staging","codeToExecute.py")
 
     logger.info(s"Transform df-name ${transform.`df-name`}")
@@ -88,12 +89,17 @@ object DatabricksFlowOperation {
             logger.info(s"File output.partition ${output.partition}")
 
             val tempView = f._1
-            val outputTableName = output.table.getOrElse("")
-            val outputSchemaName = output.schema.getOrElse("")
             val outputMode = output.mode.getOrElse("")
             val partition = output.partition.getOrElse("")
-            CommonFunctions.writeToStaging(
-              s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+
+            if (partition.isEmpty) {
+              CommonFunctions.writeToStaging(
+                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").save(\"${output.path.getOrElse("")}\")""".stripMargin, "staging", "codeToExecute.py")
+            }
+            else {
+              CommonFunctions.writeToStaging(
+                s"""${CommonCodeSnippet.indentation}${tempView}.write.partitionBy(\"${partition}\").mode(\"${outputMode}\").save(\"${output.path.getOrElse("")}\")""".stripMargin, "staging", "codeToExecute.py")
+            }
           }
         })
       }
@@ -109,15 +115,21 @@ object DatabricksFlowOperation {
             logger.info(s"Databricks output.option ${output.option}")
             logger.info(s"Databricks output.mode ${output.mode}")
             logger.info(s"Databricks output.partition ${output.partition}")
-
             val tempView = f._1
             val outputTableName = output.table.getOrElse("")
             val outputSchemaName = output.schema.getOrElse("")
             val outputMode = output.mode.getOrElse("")
             val partition = output.partition.getOrElse("")
-            CommonFunctions.writeToStaging(
-              s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
-          }
+            if (partition.isEmpty) {
+              CommonFunctions.writeToStaging(
+                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+
+            }else{
+              CommonFunctions.writeToStaging(
+                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").partitionBy(\"${partition}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
+
+            }
+                      }
         })
       }
     }

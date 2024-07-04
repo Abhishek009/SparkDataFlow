@@ -1,4 +1,4 @@
-jobName: databricksJob
+jobName: DatabricksJob
 engine: databricks
 job:
   - input:
@@ -9,23 +9,29 @@ job:
       schema: ipl
 
   - input:
-      df-name: books
+      df-name: fileread
       type: file
       identifier: local
-      option: |
-        delimiter=,
-        header=true
       path: D:/SampleData/IPL/matches.csv
 
   - transform:
       df-name: t1
-      t_inputs: dbread
+      t_inputs: dbread,fileread
       query: '--file D:/Google_Drive_Rahul/GitHub/SparkDataFlow/sql/sample.sql'
       output: out-01
 
   - output:
       df-name: out-01
       type: file
-      identifier: local
+      identifier: adfss
+      partition: ods
       path: D:\SampleData\mysql_sample_data_1
+
+  - output:
+      df-name: out-01
+      type: databricks
+      identifier: dev
+      partition: ods
+      schema: deliveries
+      table: iploutput
 

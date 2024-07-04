@@ -20,12 +20,20 @@ object DatabrickFileOperation {
    // val mapOfOption = arrayOfOption.map(s => (s"""${s.split("=")(0)}""", s"""\'${s.split("=")(1)}\'"""))
     val mapOfOption = CommonFunctions.getOptionsForDatabricks(more_option)
     logger.info("mapOfOption " + mapOfOption)
+    if (mapOfOption.isEmpty) {
+      s"""${CommonCodeSnippet.indentation}${CommonCodeSnippet.fileDf} = (${CommonCodeSnippet.sparkSession}.read
+         |.format(\"${format}\")
+         |.load(\"${path}\")
+         |)""".stripMargin
+    }
+    else{
+      s"""${CommonCodeSnippet.indentation}${CommonCodeSnippet.fileDf} = (${CommonCodeSnippet.sparkSession}.read
+         |.format(\"${format}\")
+         |.options(${mapOfOption})
+         |.load(\"${path}\")
+         |)""".stripMargin
+    }
 
-    s"""${CommonCodeSnippet.indentation}${CommonCodeSnippet.fileDf} = (spark.read
-       |.format(\"${format}\")
-       |.options(${mapOfOption})
-       |.load(\"${path}\")
-       |)""".stripMargin
   }
 
   def writeToFile(path:String,
