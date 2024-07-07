@@ -12,6 +12,7 @@ job:
       df-name: fileread
       type: file
       identifier: local
+      format: delta
       path: D:/SampleData/IPL/matches.csv
 
   - transform:

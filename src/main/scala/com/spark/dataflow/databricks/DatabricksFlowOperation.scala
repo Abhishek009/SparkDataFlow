@@ -29,7 +29,9 @@ object DatabricksFlowOperation {
         val identifier = input.identifier
         val option = input.option.getOrElse("")
         logger.info(s"Input other option $option")
-        val inputDataFrame = DatabrickFileOperation.getFileDF(path, option)
+        val format= input.format.getOrElse("")
+        logger.info(s"Input format is $format")
+        val inputDataFrame = DatabrickFileOperation.getFileDF(path, option, format)
         val tempTable = createTempTable(CommonCodeSnippet.fileDf,input.`df-name`)
         inputDataFrame+System.lineSeparator()+tempTable
 

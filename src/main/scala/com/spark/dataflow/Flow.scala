@@ -57,7 +57,8 @@ object Flow extends DatasetShims {
             Option(inputMap.getOrElse("table", "").asInstanceOf[String]),
             Option(inputMap.getOrElse("schema", "").asInstanceOf[String]),
             Option(inputMap.getOrElse("option", "").asInstanceOf[String]),
-            Option(inputMap.getOrElse("path", "").asInstanceOf[String])
+            Option(inputMap.getOrElse("path", "").asInstanceOf[String]),
+            Option(inputMap.getOrElse("format", "").asInstanceOf[String])
           )
         }
         case "transform" => {

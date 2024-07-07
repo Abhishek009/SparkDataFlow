@@ -39,25 +39,12 @@ object CommonFunctions {
         }
     }
 
-   /* def deleteFile(fileLocation:String,fileName:String): Unit = {
-        val file = new File(fileLocation+"/"+fileName);
-
-        if (file.delete()) {
-            println("File deleted successfully");
-        }
-        else {
-            println("Failed to delete the file");
-        }
-    }*/
-
 
     def getOptionsForDatabricks(extraOptions: String) = {
         var mapOfOption:String = ""
         if(!extraOptions.isEmpty){
             val arrayOfOption = extraOptions.split("\n")
             logger.info(arrayOfOption)
-
-
             for(element <- arrayOfOption){
                 mapOfOption=mapOfOption+element.replace("=","='")+"',"
             }
@@ -74,7 +61,6 @@ object CommonFunctions {
         val templateFile = new File(s"templates/${fileNameWithoutExtension}")
         logger.info(s"Template file ${templateFile}")
         FileUtils.copyFile(original,templateFile)
-
         templateFile.getParent
     }
 
@@ -92,12 +78,11 @@ object CommonFunctions {
         val templateBasePath = createTempFileFromGiven(sqlFile)
         logger.info(s"Template Base Path ${templateBasePath}")
         val fileTemplateLoader = new FileTemplateLoader(new File(templateBasePath))
-
         cfg.setTemplateLoader(fileTemplateLoader)
         cfg.setDefaultEncoding("UTF-8")
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER)
 
-        var filename = sourceFile.substring(0,sourceFile.lastIndexOf("."))+".ftl"
+        val filename = sourceFile.substring(0, sourceFile.lastIndexOf(".")) + ".ftl"
         logger.info(s"======> ${filename}")
         val template = cfg.getTemplate(filename)
         val out = new StringWriter
@@ -112,6 +97,7 @@ object CommonFunctions {
         }catch {
             case e:Exception => {
                 logger.error("Not able to created the file")
+                logger.error(e.printStackTrace())
             }
         }
     }

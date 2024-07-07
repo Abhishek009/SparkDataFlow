@@ -1,1 +1,1 @@
-Select * from dbread a LeftJoin fileread b on a.id=b.id where ods='20240619'
+Select * from dbread a LEFT JOIN fileread b on a.id=b.id where ods='20240619'

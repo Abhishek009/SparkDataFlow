@@ -166,7 +166,7 @@ object Connection {
     val cluster_id = getClusterId(http_path)
     val host = clusterConfig.get("host").getOrElse("")
     val TOKEN = clusterConfig.get("TOKEN").getOrElse("")
-    val path = Paths.get("/datadrive/athena_in_packages/common/scripts/sdf/codeToExecute.py")
+    val path = Paths.get("/datadrive/athena_in_packages/common/scripts/sdf/staging/codeToExecute.py")
     val text = new String(Files.readAllBytes(path), StandardCharsets.UTF_8)
     logger.info(s"Original text data $text")
     val encodedText = Base64.getEncoder.encodeToString(text.getBytes(StandardCharsets.UTF_8))
