@@ -37,6 +37,7 @@ class CLIConfigParser(arguments: Array[String]) extends ScallopConf(arguments) {
     argsMap += ("jobFile" -> jobFile())
     argsMap += ("jobConfig" -> jobConfig.toOption.getOrElse(""))
 
+
     argsMap
   }
 

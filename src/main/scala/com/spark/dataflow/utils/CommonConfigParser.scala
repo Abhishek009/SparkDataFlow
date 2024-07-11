@@ -1,19 +1,25 @@
 package com.spark.dataflow.utils
 
 
+import com.spark.dataflow.Flow.getClass
+import org.apache.logging.log4j.LogManager
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import upickle.default.read
 
 import scala.io
-import java.io.{File, FileInputStream}
+import java.io.{File, FileInputStream, FileNotFoundException}
 import java.util
+import java.util.Properties
 import scala.collection.JavaConverters._
+import scala.io.Source
 
 
 
 object CommonConfigParser {
+
+  val logger = LogManager.getLogger(getClass.getSimpleName)
 
   /**
    *
@@ -38,4 +44,13 @@ object CommonConfigParser {
     read[Map[String,String]](input)
   }
 
+  def getSparkConfig(sparkConfigFile:String):Map[String,String] = {
+    val lines = Source.fromFile(sparkConfigFile).getLines()
+    val propertiesMap = lines.map {
+      line =>
+        val Array(key, value) = line.split("=")
+        key -> value
+    }.toMap
+    propertiesMap
+  }
 }

@@ -12,13 +12,16 @@ job:
       df-name: fileread
       type: file
       identifier: local
-      format: delta
+      format: csv
+      option: |
+          header=true
+          delimiter=,
       path: D:/SampleData/IPL/matches.csv
 
   - transform:
       df-name: t1
       t_inputs: dbread,fileread
-      query: '--file D:/Google_Drive_Rahul/GitHub/SparkDataFlow/sql/sample.sql'
+      query: "--file D:/Google_Drive_Rahul/GitHub/SparkDataFlow/sql/sample.sql"
       output: out-01
 
   - output:

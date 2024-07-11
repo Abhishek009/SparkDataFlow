@@ -22,7 +22,7 @@ job:
       df-name: out-01
       type: file
       identifier: local
-      path: D:\SampleData\mysql_sample_data_1
+      path: D:\SampleData\mysql_sample_data_2
       output_format: csv
       option: delimiter=#
       mode: overwrite

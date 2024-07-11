@@ -61,7 +61,6 @@ object DatabricksFlowOperation {
   def createTransformation(transform: Transform): mutable.Map[String, String] = {
 
     CommonFunctions.writeToStaging(s"""${CommonCodeSnippet.indentation}${transform.`df-name`}=${CommonCodeSnippet.sparkSession}.sql(\"\"\" ${transform.query.stripMargin} \"\"\")""","staging","codeToExecute.py")
-    //CommonFunctions.writeToStaging(s"""${CommonCodeSnippet.indentation}${transform.`df-name`}=sparkSession.sql(\"\"\" ${transform.`df-name`} \"\"\")""","staging","codeToExecute.py")
 
     logger.info(s"Transform df-name ${transform.`df-name`}")
     logger.info(s"Transform t_inputs ${transform.t_inputs.getOrElse("")}")

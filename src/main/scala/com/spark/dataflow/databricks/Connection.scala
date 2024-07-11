@@ -40,13 +40,16 @@ object Connection {
 
   def getConfig(jobConfigFileName: String,identifier:String): Map[String, String] = {
     val commonConfig = CommonConfigParser.parseConfig(jobConfigFileName, "databricks", identifier)
+    println(commonConfig)
     val host = commonConfig.get("host")
     val http_path = commonConfig.get("http_path")
     val TOKEN = commonConfig.get("token")
+    val sparkConfig = commonConfig.get("spark_config")
     var config: Map[String, String] = Map()
     config += "host" -> host
     config += "http_path" -> http_path
     config += "TOKEN" -> TOKEN
+    config += "spark_config" -> sparkConfig
     config
   }
 

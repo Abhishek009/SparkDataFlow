@@ -4,6 +4,7 @@ object CommonCodeSnippet {
 
   val sparkSession="sparkSession"
   val sparkSessionInitialize=s"${sparkSession} = SparkSession.builder.getOrCreate()"
+  val sparkConfig=s"${sparkSession}.conf.set"
   val initialImports=
     s"""
        |import os
