@@ -29,13 +29,14 @@ job:
       type: file
       identifier: adfss
       partition: ods
+      format: csv
       path: D:\SampleData\mysql_sample_data_1
 
   - output:
       df-name: out-01
       type: databricks
       identifier: dev
-      partition: ods
+      output_format: csv
       schema: deliveries
       table: iploutput
 
