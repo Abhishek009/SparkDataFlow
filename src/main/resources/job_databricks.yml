@@ -30,6 +30,9 @@ job:
       identifier: adfss
       partition: ods
       format: csv
+      option: |
+          mergeSchema=true
+          doSomething=yes
       path: D:\SampleData\mysql_sample_data_1
 
   - output:
