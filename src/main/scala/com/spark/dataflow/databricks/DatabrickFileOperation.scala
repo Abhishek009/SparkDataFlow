@@ -29,7 +29,7 @@ object DatabrickFileOperation {
     else{
       s"""${CommonCodeSnippet.indentation}${CommonCodeSnippet.fileDf} = (${CommonCodeSnippet.sparkSession}.read
          |.format(\"${format}\")
-         |.options(${mapOfOption})
+         |${mapOfOption}
          |.load(\"${path}\")
          |)""".stripMargin
     }

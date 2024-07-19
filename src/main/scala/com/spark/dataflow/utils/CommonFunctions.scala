@@ -44,11 +44,14 @@ object CommonFunctions {
         var mapOfOption:String = ""
         if(!extraOptions.isEmpty){
             val arrayOfOption = extraOptions.split("\n")
-            logger.info(arrayOfOption)
+
             for(element <- arrayOfOption){
-                mapOfOption=mapOfOption+element.replace("=","='")+"',"
+                var map="\""+element.replace("=","\",\"")+"\""
+
+                mapOfOption=mapOfOption+s".option(${map})"
+                logger.info("=============>"+mapOfOption)
             }
-            mapOfOption=mapOfOption.init
+           mapOfOption=mapOfOption
         }
         mapOfOption
     }

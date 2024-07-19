@@ -1,1 +1,0 @@
-Select * from dbread a LEFT JOIN fileread b on a.id=b.id where ods='2024-06-19'

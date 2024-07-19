@@ -91,16 +91,10 @@ object DatabricksFlowOperation {
 
             val tempView = f._1
             val outputMode = output.mode.getOrElse("")
-            val partition = output.partition.getOrElse("")
 
-            if (partition.isEmpty) {
-              CommonFunctions.writeToStaging(
-                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\").save(\"${output.path.getOrElse("")}\")""".stripMargin, "staging", "codeToExecute.py")
-            }
-            else {
-              CommonFunctions.writeToStaging(
-                s"""${CommonCodeSnippet.indentation}${tempView}.write.partitionBy(\"${partition}\").mode(\"${outputMode}\").save(\"${output.path.getOrElse("")}\")""".stripMargin, "staging", "codeToExecute.py")
-            }
+            val partition = if (output.partition.getOrElse("").isEmpty) "" else s""".partitionBy(\"${output.partition.getOrElse("")}\")""".trim
+            CommonFunctions.writeToStaging(
+              s"""${CommonCodeSnippet.indentation}${tempView}.write${partition}.mode(\"${outputMode}\").save(\"${output.path.getOrElse("")}\")""".stripMargin, "staging", "codeToExecute.py")
           }
         })
       }
@@ -120,8 +114,6 @@ object DatabricksFlowOperation {
             val outputTableName = output.table.getOrElse("")
             val outputSchemaName = output.schema.getOrElse("")
             val outputMode = output.mode.getOrElse("")
-            /*val partition = output.partition.getOrElse("")*/
-            /*val outputOptions = output.option.getOrElse("")*/
 
             val output_format = if (output.output_format.getOrElse("").isEmpty) "" else s""".format(\"${output.output_format.getOrElse("")}\")""".trim
             val outputOptions = if (output.option.getOrElse("").isEmpty) "" else s""".option(\"${output.option.getOrElse("")}\")""".trim
@@ -129,16 +121,6 @@ object DatabricksFlowOperation {
             CommonFunctions.writeToStaging(
               s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\")${output_format}${outputOptions}${partition}.saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
 
-            /*if (partition.isEmpty) {
-              CommonFunctions.writeToStaging(
-                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\")${output_format}${outputOptions}.saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
-
-
-            } else {
-              CommonFunctions.writeToStaging(
-                s"""${CommonCodeSnippet.indentation}${tempView}.write.mode(\"${outputMode}\")${output_format}${outputOptions}.partitionBy(\"${partition}\").saveAsTable(\"$outputSchemaName.$outputTableName\")""".stripMargin, "staging", "codeToExecute.py")
-
-            }*/
           }
         })
       }
