@@ -29,7 +29,7 @@ job:
       type: file
       identifier: adfss
       partition: ods
-      format: csv
+      output_format: csv
       option: |
           mergeSchema=true
           doSomething=yes
