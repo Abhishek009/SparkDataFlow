@@ -115,7 +115,6 @@ object DatabricksFlowOperation {
             val outputSchemaName = output.schema.getOrElse("")
             val outputMode = output.mode.getOrElse("")
             val mapOfOption = CommonFunctions.getOptionsForDatabricks(output.option.getOrElse(""))
-            //val output_format = if (output.output_format.getOrElse("").isEmpty) "" else s""".format(\"${output.output_format.getOrElse("")}\")""".trim
             val outputOptions = if (output.option.getOrElse("").isEmpty) "" else mapOfOption.trim
             val partition = if (output.partition.getOrElse("").isEmpty) "" else s""".partitionBy(\"${output.partition.getOrElse("")}\")""".trim
             CommonFunctions.writeToStaging(
