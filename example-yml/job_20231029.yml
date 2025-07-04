@@ -1,0 +1,40 @@
+jobName: mysqltolocal
+
+job:
+  - input:
+      df-name: mysqlread
+      type: jdbc
+      identifier: mysql
+      table: deliveries
+      schema: ipl
+  - input:
+      df-name: books
+      type: file
+      identifier: local
+      option: delimiter=,$header=true
+      path: D:/SampleData/IPL/matches.csv
+
+  - transform:
+      df-name: t1
+      t_inputs: mysqlread
+      query: Select m.batsman,b.city from mysqlread m join books b on m.match_id=b.id where b.city="Hyderabad"
+      output: out-01
+
+  - transform:
+      df-name: t2
+      t_inputs: t1
+      query: select count(*) from t1;
+      output: out-02
+
+  - output:
+      df-name: out-01
+      type: file
+      identifier: local
+      path: D:/SampleData/IPLSample
+
+  - output:
+      df-name: out-02
+      type: jdbc
+      identifier: mysql
+      table: sampleipldata2
+      schema: sparkdataflow
