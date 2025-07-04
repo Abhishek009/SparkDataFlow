@@ -3,7 +3,7 @@
 # Output: Writes the output of transformation  to local file
 
 jobName: SqlServer_To_SqlServer
-
+engine: spark
 job:
   - input:
       df-name: sql_server_source_one

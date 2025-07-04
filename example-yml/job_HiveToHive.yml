@@ -1,5 +1,5 @@
 jobName: HiveToHive
-
+engine: spark
 job:
   - input:
       df-name: etl_framework_source_one

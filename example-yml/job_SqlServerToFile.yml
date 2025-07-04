@@ -3,7 +3,7 @@
 # Output: Writes the output of transformation  to local file
 
 jobName: sqlServerToLocal
-
+engine: spark
 job:
   - input:
       df-name: mysql_customer_info

@@ -3,7 +3,7 @@
 # Output: Writes the output of transformation  to local file
 
 jobName: mysqltolocal
-
+engine: spark
 job:
   - input:
       df-name: sdf_framework_source_one

@@ -4,13 +4,11 @@ import com.spark.dataflow.configparser.{Input, Output, Pipeline, Transform}
 import com.spark.dataflow.databricks.{DatabricksEngine, DatabricksFlowOperation}
 import org.apache.logging.log4j.LogManager
 import org.yaml.snakeyaml.Yaml
-
 import scala.collection.convert.ImplicitConversions.`map AsScala`
 import com.spark.dataflow.models.FlowOperation
 import com.spark.dataflow.utils.CommonCodeSnippet._
 import com.spark.dataflow.utils.{CommonCodeSnippet, CommonConfigParser, CommonFunctions, SparkJob}
 import org.apache.spark.sql.{DataFrame, DatasetShims}
-
 import java.io.{File, FileInputStream}
 import java.util
 import scala.collection.JavaConverters._
@@ -29,18 +27,16 @@ object Flow extends DatasetShims {
       """Looks like you have pass some yaml key which is not acceptable by the SparkDataFlow
         | Acceptable tags are input,transform,output""".stripMargin
 
-
     val logger = LogManager.getLogger(getClass.getSimpleName)
     val conf = new CLIConfigParser(args)
     val argsMap: scala.collection.mutable.Map[String, String] = conf.getArgMap()
-
     val commonConfigFileName = argsMap.getOrElse("configFile","")
     val jobConfigFileName = argsMap.getOrElse("jobFile","")
-
     val configVariables = argsMap.getOrElse("jobConfig","")
     val jobConfig = new FileInputStream((new File(commonConfigFileName)))
     val yaml  = new Yaml().load(jobConfig).asInstanceOf[java.util.Map[String, Any]].asScala.toMap
     val jobName = yaml("jobName").asInstanceOf[String]
+
     logger.info(s"Job Name: ${jobName}")
     logger.info(s"Configuration File Name: ${jobConfigFileName}")
     
@@ -119,30 +115,29 @@ object Flow extends DatasetShims {
       case "spark" => {
 
         val spark = SparkJob.createSparkSession(jobName, "local")
-        jobList.foreach(
-          job => {
-            job match {
-              case input: Input => {
-                FlowOperation.createInput(input, spark,jobConfigFileName)
-              }
-              case transform: Transform => {
-                transformToOutputMapping = FlowOperation.createTransformation(transform, spark)
-                val sparkTempCatalog:DataFrame = spark.sql(s"show tables")
+        jobList.foreach {
+          case input: Input => {
+            FlowOperation.createInput(input, spark, jobConfigFileName)
+          }
+          case transform: Transform => {
+            transformToOutputMapping = FlowOperation.createTransformation(transform, spark)
+            val sparkTempCatalog: DataFrame = spark.sql(s"show tables")
 
-                logger.info(s"Spark Temp Catalog ")
-                //logger.info(new DatasetHelper(sparkTempCatalog).toShowString(20))
-                sparkTempCatalog.foreach(f =>  {logger.info(f.get(f.fieldIndex("database"))+ "|"+ f.get(f.fieldIndex("tableName")))})
-                logger.info(s"Transform To Output Mapping ${transformToOutputMapping}")
-              }
+            logger.info(s"Spark Temp Catalog ")
+            //logger.info(new DatasetHelper(sparkTempCatalog).toShowString(20))
+            sparkTempCatalog.foreach(f => {
+              logger.info(f.get(f.fieldIndex("database")) + "|" + f.get(f.fieldIndex("tableName")))
+            })
+            logger.info(s"Transform To Output Mapping ${transformToOutputMapping}")
+          }
 
-              case output: Output =>{
-                FlowOperation.createOutput(output,spark,transformToOutputMapping,jobConfigFileName)
-              }
-              case _ => {
-                logger.error(usage)
-              }
-            }
-          })
+          case output: Output => {
+            FlowOperation.createOutput(output, spark, transformToOutputMapping, jobConfigFileName)
+          }
+          case _ => {
+            logger.error(usage)
+          }
+        }
       }
     }
   }

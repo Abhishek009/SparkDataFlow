@@ -10,9 +10,9 @@ jdbc:
 
     postgres:
       username: postgres
-      password: YOURPASSWORD
+      password: root
       url: jdbc:postgresql://localhost:5432
-      database: my-first-azure-db
+      database: dvdrental
       driver: org.postgresql.Driver
 
     sqlserver:
