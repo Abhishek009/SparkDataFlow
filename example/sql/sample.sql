@@ -1,0 +1,1 @@
+Select * from ${SCHEMA_1} a LEFT JOIN ${SCHEMA_2} b on a.id=b.id where ods='${ods}'

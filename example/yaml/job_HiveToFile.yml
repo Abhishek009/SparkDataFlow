@@ -1,0 +1,25 @@
+jobName: HiveToFile
+engine: spark
+job:
+  - input:
+      df-name: etl_framework_source_one
+      type: hive
+      identifier: hive
+      table: etl_framework_source_one
+      schema: YOUR_SCHEMA_NAME
+
+  - transform:
+      df-name: t1
+      t_inputs: etl_framework_source_one
+      query: Select * from etl_framework_source_one
+      output: out-01
+
+  - output:
+      df-name: out-01
+      type: file
+      identifier: hdfs
+      path: /your/hdfs/location
+      output_format: csv
+      mode: append #Default is overwrite
+      option: delimiter=\t # optional
+      partition: id # optional

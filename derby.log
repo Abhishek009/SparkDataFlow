@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Mon Oct 23 18:22:10 SGT 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018b-5c0e-691f-000004c23558 
+on database directory D:\Google_Drive_Rahul\java_program\BigData\SparkDataFlow\metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5cb0d902 
+Loaded from file:/D:/BigDataLocalSetup/Spark_local_setup/spark-3.5.0/jars/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.2+9
+user.dir=D:\Google_Drive_Rahul\java_program\BigData\SparkDataFlow
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
