@@ -1,10 +1,30 @@
 # SparkDataFlow
-SDF(Spark Data Flow) is an ETL tool which allows users to quickly write etl jobs based on the sql queries.
 
+A modular ETL framework in Scala supporting YAML-based job configuration, Spark transformations, and flexible input/output sources.
+
+## Features
+
+- **YAML-driven ETL**: Define jobs, inputs, transforms, and outputs in YAML.
+- **Custom Transform Scripts**: Supports SQL, Python, and Scala scripts for data transformation.
+- **Multiple Engines**: Run jobs on Spark or Databricks.
+- **Robust Error Handling**: Logging and graceful failure for YAML parsing, Spark jobs, and database operations.
+
+## Getting Started
+
+### Prerequisites
+
+- Java 8+
+- Scala 2.12+
+- Apache Spark 3.x
+- Maven
+
+## Run
+```shell
+spark-submit --class com.spark.dataflow.Flow target/sparkdataflow-1.0.jar --jobFile <job_file.yml> --jobConfig <config.yml> --configFile <meta_config.json>
+```
 **job_FileToMysql.yml**
 
 ```jobName: FileToMySql
-
 jobName: FileToMysql
 engine: spark
 job:
