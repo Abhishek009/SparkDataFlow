@@ -13,7 +13,7 @@ A modular ETL framework in Scala supporting YAML-based job configuration, Spark 
 
 ### Prerequisites
 
-- Java 8+
+- Java 11+
 - Scala 2.12+
 - Apache Spark 3.x
 - Maven
