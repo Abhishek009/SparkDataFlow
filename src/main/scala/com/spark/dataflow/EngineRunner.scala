@@ -13,7 +13,7 @@ object EngineRunner {
     var transformToOutputMapping = scala.collection.mutable.Map.empty[String, String]
     pipeline.engine match {
       case "spark" =>
-        val spark = SparkJob.createSparkSession(pipeline.jobName, "local")
+        val spark = SparkJob.createSparkSession(pipeline.jobName)
         jobList.foreach {
           case input: Input => FlowOperation.createInput(input, spark, configVariables)
           case transform: Transform => transformToOutputMapping = FlowOperation.createTransformation(transform, spark)
@@ -23,9 +23,7 @@ object EngineRunner {
       case "databricks" =>
       // Call DatabricksEngine logic
       case _ => logger.error("Supported engine is Spark")
-      case "spark-connect" =>
-      // Call Spark Connect
-      case _ => logger.error("Supported engine is Spark")
+
     }
   }
 }

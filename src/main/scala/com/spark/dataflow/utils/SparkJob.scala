@@ -1,6 +1,7 @@
 package com.spark.dataflow.utils
 
 
+import com.spark.dataflow.utils.SparkJob.spark
 import org.apache.logging.log4j.{LogManager, Logger}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
@@ -13,29 +14,31 @@ object SparkJob {
    * @param appName
    * @param master
    */
-  def createSparkSession(appName: String, master: String): SparkSession = {
+  def createSparkSession(appName: String): SparkSession = {
 
-    logger.info(s"Master: ${master}")
     logger.info(s"AppName: ${appName}")
-    master match {
-      case "local" => spark = SparkSession.builder().appName(appName).master("local[1]").getOrCreate()
-      case _ => {
-        spark = SparkSession.builder().appName(appName).enableHiveSupport().getOrCreate()
-      }
+    val sparkBuilder = if (isWindows()) {
+      SparkSession.builder().appName(appName).master("local[2]")
+    } else {
+      SparkSession.builder().appName(appName)
     }
+    val spark = sparkBuilder.enableHiveSupport().getOrCreate()
     logger.info(s"spark: ${spark}")
     spark
   }
 
+  def isWindows(): Boolean = {
+    System.getProperty("os.name").toLowerCase().contains("windows")
+  }
   /**
    * @param appName
    * @param master
    * @param session
    */
-  def isSparkSessionAvailable(appName: String, master: String, session: SparkSession): Unit = {
+  def isSparkSessionAvailable(appName: String, session: SparkSession): Unit = {
     val sparkSession = session match {
       case ss => ss
-      case _ => createSparkSession(appName, master)
+      case _ => createSparkSession(appName)
     }
   }
 

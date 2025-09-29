@@ -4,10 +4,6 @@ import org.apache.logging.log4j.LogManager
 import org.apache.spark.sql.{DataFrame, DatasetShims}
 
 object Flow extends DatasetShims {
-  var usage: String =
-    """Looks like you have pass some yaml key which is not acceptable by the SparkDataFlow
-      | Acceptable tags are input,transform,output""".stripMargin
-
 
   def main(args: Array[String]): Unit = {
     val usage: String =

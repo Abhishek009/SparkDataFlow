@@ -64,7 +64,9 @@ case "$CMD" in
 
 
     spark-submit \
-    --master local \
+    --conf spark.hadoop.fs.defaultFS="hdfs://namenode:9000" \
+    --conf spark.yarn.historyServer.address="http://historyserver:18080" \
+    --master yarn \
     --class com.spark.dataflow.Flow "${SDF_BASE_PATH}/jars/SparkDataFlow-jar-with-dependencies.jar" \
     --configFile "${CONFIG_FILE}" \
     --jobFile "${JOB_FILE}" \
