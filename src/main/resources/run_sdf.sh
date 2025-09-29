@@ -52,7 +52,7 @@ done
 # Validate command
 case "$CMD" in
   run)
-    if [[ -z "$JOB_FILE" || -z "$CONFIG_FILE" ]]; then
+    if [ -z "$JOB_FILE" ] || [ -z "$CONFIG_FILE" ]; then
       echo "Missing job or config file for 'run' command"
       exit 1
     fi
