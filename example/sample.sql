@@ -1,4 +1,4 @@
-create schema sdf_schema;
+CREATE SCHEMA sdf_schema;
 
 CREATE TABLE sdf_schema.sdf_framework_source_one (
   id int DEFAULT NULL,
@@ -8,13 +8,8 @@ CREATE TABLE sdf_schema.sdf_framework_source_one (
   cardnumber bigint DEFAULT NULL
 );
 
-CREATE TABLE sdf_schema.sdf_framework_source_two (
-  id int DEFAULT NULL,
-  first_name text,
-  last_name text,
-  accountnumber text,
-  cardnumber bigint DEFAULT NULL
-);
+select * from sdf_schema.sdf_framework_source_one;
+truncate table sdf_schema.sdf_framework_source_one;
 
 CREATE TABLE sdf_schema.sdf_framework_source_two (
   id int DEFAULT NULL,
@@ -23,6 +18,8 @@ CREATE TABLE sdf_schema.sdf_framework_source_two (
   accountnumber text,
   cardnumber bigint DEFAULT NULL
 );
+
+
 
 CREATE TABLE sdf_schema.spark_sdf_join(
 id text,

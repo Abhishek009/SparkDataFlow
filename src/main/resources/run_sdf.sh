@@ -6,6 +6,12 @@ JOB_FILE=""
 CONFIG_FILE=""
 SPARK_CONFIG_FILE=""
 
+#export SDF_LINEAGE_PATH="/home/jovyan/work/SparkDataFlow"
+#export SDF_BASE_PATH="/home/jovyan/work/SparkDataFlow"
+
+#sh ${SDF_BASE_PATH}/src/run_sdf.sh --cmd run --j ${SDF_BASE_PATH}/yaml/job_fileToMysql.yml --s ${SDF_BASE_PATH}/sdf.conf --c ${SDF_BASE_PATH}/config.yml
+#sh ${SDF_BASE_PATH}/src/run_sdf.sh --cmd generate --j ${SDF_BASE_PATH}/yaml/job_fileToMysql.yml
+
 if [ -z "$SDF_BASE_PATH" ]; then
         echo "Error: SDF_BASE_PATH is empty or unset. "
         exit 1
@@ -15,7 +21,7 @@ if [ -z "$SDF_BASE_PATH" ]; then
 
 
 # Parse flags
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case "$1" in
     --cmd)
       CMD="$2"
@@ -36,7 +42,7 @@ while [[ $# -gt 0 ]]; do
     *)
       echo "Unknown argument: $1"
       echo "Usage:"
-      echo "  $0 --cmd run --j <job_file> --c <config_file> --c <spark_config_file>"
+      echo "  $0 --cmd run --j <job_file> --c <config_file> --s <spark_config_file>"
       echo "  $0 --cmd generate --j <job_file>"
       exit 1
       ;;
@@ -56,24 +62,25 @@ case "$CMD" in
       config="${config} --conf ${line}"
     done < "${SPARK_CONFIG_FILE}"
 
-    export base_path=${SDF_BASE_PATH}
-    spark-submit.cmd \
+
+    spark-submit \
     --master local \
-    --class com.spark.dataflow.Flow "${base_path}/target/SparkDataFlow-jar-with-dependencies.jar" \
+    --class com.spark.dataflow.Flow "${SDF_BASE_PATH}/jars/SparkDataFlow-jar-with-dependencies.jar" \
     --configFile "${CONFIG_FILE}" \
-    --jobFile "${JOB_FILE}"
+    --jobFile "${JOB_FILE}" \
+    --jobConfig "${SPARK_CONFIG_FILE}"
     ;;
   generate)
-    if [[ -z "$JOB_FILE" ]]; then
+    if [ -z "$JOB_FILE" ]; then
       echo "Missing job file or output path for 'generate' command"
       exit 1
     fi
-    java -cp ${SDF_BASE_PATH}/target/SparkDataFlow-jar-with-dependencies.jar \
+    java -cp ${SDF_BASE_PATH}/jars/SparkDataFlow-jar-with-dependencies.jar \
     com.spark.dataflow.lineage.LineageGenerator "${JOB_FILE}" \
-    "${SDF_BASE_PATH}/ReactBuild/pipelineConfig.json"
-    java -cp ${SDF_BASE_PATH}/target/SparkDataFlow-jar-with-dependencies.jar \
+    "${SDF_LINEAGE_PATH}/ReactBuild/pipelineConfig.json"
+    java -cp ${SDF_BASE_PATH}/jars/SparkDataFlow-jar-with-dependencies.jar \
     com.spark.dataflow.lineage.SpringBootStaticFileServer \
-    --external.static.files.path="${SDF_BASE_PATH}/ReactBuild" --server.port=8000
+    --external.static.files.path="${SDF_LINEAGE_PATH}/ReactBuild" --server.port=8000
     ;;
   *)
     echo "Invalid or missing --cmd value. Use 'run' or 'generate'."
