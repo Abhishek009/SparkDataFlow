@@ -4,7 +4,7 @@ import com.spark.dataflow.configparser.{Input, Output, Transform}
 import com.spark.dataflow.models.FileOperation.{logger, writeToFile}
 import com.spark.dataflow.models.HiveOperation.writeToHiveTable
 import com.spark.dataflow.models.MysqlOperation.writeToJdbc
-import com.spark.dataflow.utils.CommonFunctions.writeToStaging
+import com.spark.dataflow.utils.CommonFunctions.isLocalRead
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import com.spark.dataflow.utils.{CommonConfigParser, SparkJob}
 import org.apache.logging.log4j.{LogManager, Logger}
@@ -48,11 +48,11 @@ object FlowOperation {
         logger.info(s"Input df-name : ${input.`df-name`}")
         logger.info(s"Input type : ${input.`type`}")
         val path = input.path.getOrElse("")
-        logger.info(s"Data Read will happen from : $path")
-        val identifier = input.identifier
+        logger.info(s"Data Read will happen from : ${isLocalRead(input.identifier)+path}")
+        // val identifier = input.identifier
         val option = input.option.getOrElse("")
         logger.info(s"Input other option : $option")
-        inputDataFrame = FileOperation.getFileDF(spark, "", path, option)
+        inputDataFrame = FileOperation.getFileDF(spark, "", isLocalRead(input.identifier)+path, option)
         SparkJob.createTempTable(spark,inputDataFrame,input.`df-name`)
 
       }

@@ -133,6 +133,12 @@ object CommonFunctions {
        data
     }
 
+    def isLocalRead(inputType:String): String = {
+      if(inputType.contains("local"))
+        "file:///"
+      else
+        ""
+    }
 
 
 }
