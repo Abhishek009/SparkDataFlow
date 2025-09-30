@@ -1,6 +1,6 @@
 # Input: Sql Database
-# Transform: Select operation
-# Output: Writes the output of transformation  to local file
+# Transform: join operation
+# Output: Writes the output of transformation  to mysql table
 
 jobName: mysqltolocal
 engine: spark
