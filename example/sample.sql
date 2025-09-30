@@ -10,6 +10,8 @@ CREATE TABLE sdf_schema.sdf_framework_source_one (
 
 select * from sdf_schema.sdf_framework_source_one;
 truncate table sdf_schema.sdf_framework_source_one;
+select * from sdf_schema.sdf_framework_output_one;
+select * from sdf_schema.spark_sdf_join;
 
 CREATE TABLE sdf_schema.sdf_framework_source_two (
   id int DEFAULT NULL,
