@@ -124,7 +124,6 @@ object CommonFunctions {
         }
     }
 
-
     def removeFile(tempCodeFile: String):Boolean = {
         var isFileDeleted=false
         try {
@@ -139,7 +138,6 @@ object CommonFunctions {
 
         isFileDeleted
     }
-
 
     def readFileAsString(fileLocation:String):String = {
         var data=""
