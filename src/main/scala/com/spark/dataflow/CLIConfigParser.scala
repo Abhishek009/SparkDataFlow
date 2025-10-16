@@ -17,18 +17,22 @@ class CLIConfigParser(arguments: Array[String]) extends ScallopConf(arguments) {
   val configFile = opt[String](
     name = "configFile",
     required = true,
-    descr = "Config File is required")
+    descr = "Config File contains the connection details")
 
   val jobFile = opt[String](
     name = "jobFile",
     required = true,
-    descr = "Job File is required")
+    descr = "Job file which has the yaml with input, transformation and load.")
 
   val jobConfig = opt[String](
     name = "jobConfig",
     required = false,
-    descr = "File which contains the variable for the sql")
+    descr = "Contains Spark Configuration")
 
+  val paramFile = opt[String](
+    name = "paramFile",
+    required = false,
+    descr = "File which contains the variable for the sql")
 
 
   def getArgMap(): Map[String, String] = {
@@ -36,6 +40,7 @@ class CLIConfigParser(arguments: Array[String]) extends ScallopConf(arguments) {
     argsMap += ("configFile" -> configFile())
     argsMap += ("jobFile" -> jobFile())
     argsMap += ("jobConfig" -> jobConfig.toOption.getOrElse(""))
+    argsMap += ("paramFile" -> paramFile.toOption.getOrElse(""))
 
 
     argsMap

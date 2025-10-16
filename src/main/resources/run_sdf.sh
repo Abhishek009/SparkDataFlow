@@ -5,7 +5,7 @@ CMD=""
 JOB_FILE=""
 CONFIG_FILE=""
 SPARK_CONFIG_FILE=""
-
+PARAM_FILE=""
 #export SDF_LINEAGE_PATH="/home/jovyan/work/SparkDataFlow"
 #export SDF_BASE_PATH="/home/jovyan/work/SparkDataFlow"
 
@@ -39,6 +39,10 @@ while [ $# -gt 0 ]; do
       SPARK_CONFIG_FILE="$2"
       shift 2
       ;;
+    --p)
+      PARAM_FILE="$2"
+      shift 2
+      ;;
     *)
       echo "Unknown argument: $1"
       echo "Usage:"
@@ -52,7 +56,7 @@ done
 # Validate command
 case "$CMD" in
   run)
-    if [ -z "$JOB_FILE" ] || [ -z "$CONFIG_FILE" ]; then
+    if [ -z "$JOB_FILE" ] || [ -z "$CONFIG_FILE" ] || [ -z "$SPARK_CONFIG_FILE" ] || [ -z "$PARAM_FILE" ]; then
       echo "Missing job or config file for 'run' command"
       exit 1
     fi
@@ -64,13 +68,13 @@ case "$CMD" in
 
 
     spark-submit \
-    --conf spark.hadoop.fs.defaultFS="hdfs://namenode:9000" \
-    --conf spark.yarn.historyServer.address="http://historyserver:18080" \
     --master yarn \
+    ${config} \
     --class com.spark.dataflow.Flow "${SDF_BASE_PATH}/jars/SparkDataFlow-jar-with-dependencies.jar" \
     --configFile "${CONFIG_FILE}" \
     --jobFile "${JOB_FILE}" \
-    --jobConfig "${SPARK_CONFIG_FILE}"
+    --jobConfig "${SPARK_CONFIG_FILE}" \
+    --paramFile "${PARAM_FILE}"
     ;;
   generate)
     if [ -z "$JOB_FILE" ]; then
