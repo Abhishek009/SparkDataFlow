@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager
 
 import scala.collection.JavaConverters._
 import java.nio.file.{Files, Paths}
-import java.io.{BufferedOutputStream, BufferedWriter, DataOutputStream, File, FileInputStream, FileOutputStream, FileWriter, StringWriter}
+import java.io.{BufferedOutputStream, BufferedWriter, DataOutputStream, File, FileInputStream, FileOutputStream, FileWriter, StringReader, StringWriter}
 import java.nio.charset.StandardCharsets
 
 
@@ -75,7 +75,26 @@ object CommonFunctions {
 
     }
 
-    def templateExecution(sqlFile:String,configVariables:String): Unit = {
+  def processFreemarkerTemplate(sqlInYaml: String, paramFile: String):String = {
+    logger.info(s"Config Variables ${paramFile}")
+    // Initialize FreeMarker configuration
+    val cfg = new Configuration(Configuration. VERSION_2_3_31)
+    cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER)
+    cfg.setLogTemplateExceptions(false)
+    cfg.setWrapUncheckedExceptions(true)
+    // Create a FreeNarker template from the query string
+    val template = new StringReader(sqlInYaml)
+    // Process the template with the provided data
+    val writer = new StringWriter()
+    val freemarkerTemplate= new freemarker.template.Template ( "sqlTemplate", template,cfg)
+    val someAttributes: Map[String,String] = if (paramFile != "")
+      { CommonConfigParser.getMetaConfig(paramFile) } else { Map()}
+      freemarkerTemplate.process(someAttributes.asJava, writer)
+        writer.toString
+
+  }
+
+  def templateExecution(sqlFile:String,configVariables:String): Unit = {
         val sourceFile = new File(sqlFile).getName
         val cfg = new Configuration(Configuration.VERSION_2_3_31)
         val templateBasePath = createTempFileFromGiven(sqlFile)

@@ -13,7 +13,7 @@ import scala.collection.convert.ImplicitConversions.`map AsScala`
 object JobParser {
   val logger: Logger = LogManager.getLogger(getClass.getSimpleName)
 
-  def parseJobConfig(jobProcessFile: String, configVariables: String): Pipeline = {
+  def parseJobConfig(jobProcessFile: String, paramFile: String): Pipeline = {
     val yamlOpt = CommonConfigParser.parseYamlConfig(jobProcessFile)
     val yaml: Map[String, Any] = yamlOpt.getOrElse(Map.empty[String, Any])
     val jobName = yaml("jobName").asInstanceOf[String]
@@ -44,11 +44,12 @@ object JobParser {
 
             if (transformMap("query").asInstanceOf[String].toString.contains("--file")) {
               val sqlPath = transformMap("query").asInstanceOf[String].toString.split("--file")(1)
-              CommonFunctions.templateExecution(sqlPath.trim(), configVariables)
+              CommonFunctions.templateExecution(sqlPath.trim(), paramFile)
               sql = CommonFunctions.readFileAsString(CommonCodeSnippet.stagingLocation + "/" + new File(sqlPath.trim()).getName)
             }
             else {
-              sql = transformMap("query").asInstanceOf[String]
+              val sqlInYaml  = transformMap("query").asInstanceOf[String]
+              CommonFunctions.processFreemarkerTemplate(sqlInYaml, paramFile)
             }
 
             Transform(
