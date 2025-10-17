@@ -29,8 +29,3 @@ jobs:
       with:
         name: SparkDataFlow
         path: target/*.jar
-
-    - name: Upload JAR to GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: target/*.jar
