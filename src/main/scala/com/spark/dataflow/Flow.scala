@@ -21,7 +21,7 @@ object Flow extends DatasetShims {
     logger.info(s"Job yaml file: $jobProcessFile")
     logger.info(s"Job Configuration file: ${jobConfigFile}")
     logger.info(s"Configuration file: ${configVariables}")
-    logger.info(s"Parameter file: ${jobConfigFile}")
+    logger.info(s"Parameter file: ${paramFiles}")
 
     val pipeline = JobParser.parseJobConfig(jobProcessFile, paramFiles)
     EngineRunner.run(pipeline, configVariables, usage)

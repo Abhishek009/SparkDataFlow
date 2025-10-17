@@ -40,14 +40,11 @@ object JobParser {
           }
           case "transform" => {
             val transformMap = job("transform").asInstanceOf[java.util.Map[String, Any]].asScala.toMap
-            var sql = ""
-
-            if (transformMap("query").asInstanceOf[String].toString.contains("--file")) {
+            var sql = if (transformMap("query").asInstanceOf[String].toString.contains("--file")) {
               val sqlPath = transformMap("query").asInstanceOf[String].toString.split("--file")(1)
               CommonFunctions.templateExecution(sqlPath.trim(), paramFile)
-              sql = CommonFunctions.readFileAsString(CommonCodeSnippet.stagingLocation + "/" + new File(sqlPath.trim()).getName)
-            }
-            else {
+              CommonFunctions.readFileAsString(CommonCodeSnippet.stagingLocation + "/" + new File(sqlPath.trim()).getName)
+            } else {
               val sqlInYaml  = transformMap("query").asInstanceOf[String]
               CommonFunctions.processFreemarkerTemplate(sqlInYaml, paramFile)
             }
