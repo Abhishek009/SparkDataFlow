@@ -13,7 +13,7 @@
         <encoding>UTF-8</encoding>
         <jackson.version>2.13.4</jackson.version>
         <spark.version>3.3.2</spark.version>
-        <scala.compact.version>2.12.19</scala.compact.version>
+        <scala.compact.version>2.12.15</scala.compact.version>
         <scala.version>2.12.12</scala.version>
         <snakeyaml.version>2.2</snakeyaml.version>
         <spring.boot.version>2.7.18</spring.boot.version>
@@ -122,18 +122,21 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_2.12</artifactId>
             <version>${spark.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.12</artifactId>
             <version>${spark.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-hive_2.12</artifactId>
             <version>${spark.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

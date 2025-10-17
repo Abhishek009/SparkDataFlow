@@ -35,13 +35,13 @@ object SparkJob {
    * @param master
    * @param session
    */
-  def isSparkSessionAvailable(appName: String, session: SparkSession): Unit = {
+  /*def isSparkSessionAvailable(appName: String, session: SparkSession): Unit = {
     val sparkSession = session match {
       case ss => ss
       case _ => createSparkSession(appName)
     }
   }
-
+*/
   def createTempTable(spark: SparkSession, df: DataFrame,viewName:String): Unit = {
     df.createOrReplaceTempView(viewName)
   }
