@@ -18,10 +18,10 @@ object Flow extends DatasetShims {
     val configVariables = argsMap.getOrElse("configFile", "")
     val paramFiles = argsMap.getOrElse("paramFile","")
 
-    logger.info(s"Job yaml file $jobProcessFile")
-    logger.info(s"Job COnfiguration file: ${jobConfigFile}")
+    logger.info(s"Job yaml file: $jobProcessFile")
+    logger.info(s"Job Configuration file: ${jobConfigFile}")
     logger.info(s"Configuration file: ${configVariables}")
-    logger.info(s"Parameter File : ${jobConfigFile}")
+    logger.info(s"Parameter file: ${jobConfigFile}")
 
     val pipeline = JobParser.parseJobConfig(jobProcessFile, paramFiles)
     EngineRunner.run(pipeline, configVariables, usage)
